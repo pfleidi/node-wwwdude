@@ -1,0 +1,21 @@
+{ "name" : "node-wwwdude",
+  "description" : "Simple to use HTTP library on top of the built in libs of node.js",
+  "tags" : ["http", "simple", "util", "rest", "utility"],
+  "version" : "0.0.1",
+  "author" : "Sven Pfleiderer <sven@roothausen.de>",
+  "directories" : { "lib" : "lib" },
+  "repository" : { 
+    "type" : "git",
+    "url" : "http://github.com/pfleidi/node-wwwdude.git"
+  },
+  "bugs" : { 
+    "web" : "http://github.com/pfleidi/node-wwwdude/issues" 
+  }, 
+  "licenses" :
+    [{ 
+      "type" : "MIT",
+      "url" : "http://github.com/pfleidi/node-wwwdude/raw/master/LICENSE"
+    }],
+  "engines" : ["node >=0.1.90"],
+  "main" : "index"
+}
