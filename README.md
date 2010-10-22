@@ -1,7 +1,7 @@
 node-wwwdude
 ============
 
-node-wwwdud is a small and flexible http client library on top of node's [http.Client](http://nodejs.org/api.html#http-client-183).
+node-wwwdude is a small and flexible http client library on top of node's [http.Client](http://nodejs.org/api.html#http-client-183).
 
 Supported HTTP verbs
 --------------------
