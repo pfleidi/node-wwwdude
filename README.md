@@ -26,3 +26,9 @@ TODO:
 * Add plugin infrastructure
     * Pluggable logger support
     * Pluggable support for transparent content decoders
+
+
+License
+-------
+
+node-wwwdude is licensed unter the MIT license.
