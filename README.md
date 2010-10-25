@@ -90,7 +90,7 @@ Creates a HTTP HEAD request
 
 The customHeaders hash contains a set of HTTP headers which should be added to a request. They are optional. A working example would be:
 
-    customHeaders = { 'User-Agent': 'Foo', 'Accpt: 'text/html' };
+    customHeaders = { 'User-Agent': 'Foo', 'Accept: 'text/html' };
 
 ### Listeners
 
@@ -100,8 +100,8 @@ Every request call returns a Request object that emits events. You can add liste
 * _success_ emitted when the request was successful.
 * _error_ emitted when the request was unsuccessful. This is emitted for every response with status code > 400.
 * _redirect_ emitted when a redirect occurred. 
-* _2XX, 3XX, 4XX, 5XX etc_ emitted for every request with a response code of the same status class. E.g. 1XX, 2XX ...
-* _actual response code_ emirted for every response with a matching response code. E.g. 200, 301, 404 ...
+* _2XX, 3XX, 4XX, 5XX etc_ emitted for every request with a response code of the same status class.
+* _actual response code_ emitted for every response with a matching response code. E.g. 200, 301, 404 ...
 * _actual human readable response code_ emitted for every response with a matching readable response. E.g. 'not-found', 'bad-request', 'forbidden' ...
 
 #### Human readable response codes
@@ -149,7 +149,7 @@ Every request call returns a Request object that emits events. You can add liste
 
 To register for an event, you can use the addListener() method.
 
-    request.addListener(function (data, response) { doSomeThing(); });
+    request.addListener(event, function (data, response) { doSomeThing(); });
 
 Tha passed callback function takes two parameters: data and response. Data contains the content returned from the server. Request is a instance of node's [http.ClientResponse](http://nodejs.org/api.html#http-clientresponse-200).
 
