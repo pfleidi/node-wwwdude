@@ -60,9 +60,9 @@ API
 
 #### options hash
 
-*_encoding_ content encoding. e.g. binary or utf8. Default is utf8. 
-*_logger_ the logger you want to use. Default is an internal logger using sys.log.
-*_headers_ a hash with the headers you want to use for each request.
+* _encoding_ content encoding. e.g. binary or utf8. Default is utf8. 
+* _logger_ the logger you want to use. Default is an internal logger using sys.log.
+* _headers_ a hash with the headers you want to use for each request.
 
 This calls returns a Request object. On that request object you can call methods for each supported HTTP verb.
 
