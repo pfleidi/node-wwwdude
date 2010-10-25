@@ -17,7 +17,7 @@ Installation
 
 You can install install wwwdude via npm:
 
-npm install http://github.com/pfleidi/node-wwwdude/tarball/master 
+    npm install http://github.com/pfleidi/node-wwwdude/tarball/master 
 
 Usage
 -----
@@ -53,7 +53,7 @@ Tests
 
 To run the unit tests, nodeunit and log4js-node are required. You can install them via npm:
 
-npm install nodeunit log4js
+    npm install nodeunit log4js
 
 There's a Makefile to run the tests:
 
