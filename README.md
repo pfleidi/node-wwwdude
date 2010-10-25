@@ -17,7 +17,7 @@ Installation
 
 You can install install wwwdude via npm:
 
-   npm install http://github.com/pfleidi/node-wwwdude/tarball/master 
+    npm install http://github.com/pfleidi/node-wwwdude/tarball/master 
 
 Tests
 -----
