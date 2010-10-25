@@ -1,12 +1,22 @@
-// simple example
 var Sys = require('sys'),
 HttpClient = require('node-wwwdude');
 
+// simple example
+
+// create client
+var client = HttpClient.createClient();
+// get request with listener for 'complete' event
+client.get('http://example.com/').addListener('complete', function(data, resp) {
+    Sys.puts('Finished fetching example.com. Data: ' + data);
+}).send();
+
+// More complex example
+
+// create client with specified headers
 var client = HttpClient.createClient({
     headers: { 'User-Agent': 'fucking magnets' },
   });
 
-// make HTTP GET to google.com
 client.get('http://google.com/')
 // add listener for HTTP codes > 400
 .addListener('error', function (data, resp) {
