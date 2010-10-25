@@ -26,6 +26,10 @@ To run the unit tests, nodeunit and log4js-node are required. You can install th
 
     npm install nodeunit log4js
 
+There's a Makefile to run the tests:
+
+    make test
+
 TODO:
 -----
 
