@@ -37,7 +37,7 @@ Usage
         })
       .addListener('redirect', function (data, resp) {
           Sys.puts('Redirecting to: ' + resp.headers['location']);
-          Sys.puts('Headers: ' + Sys.inspect(resp));
+          Sys.puts('Headers: ' + Sys.inspect(resp.headers));
         })
       .addListener('success', function (data, resp) {
           Sys.debug('Got data: ' + data);
