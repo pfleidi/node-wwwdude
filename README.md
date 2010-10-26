@@ -31,7 +31,6 @@ Usage
 
 A working example:
 
-    // simple example
     var sys = require('sys'),
         wwdude = require('node-wwwdude');
 
@@ -58,13 +57,15 @@ API
 
 ### wwwdude.createClient([options]) 
 
+Creates a new client object with predefined options for each request made with this instance.
+
 #### options hash
 
 * _encoding_ content encoding. e.g. binary or utf8. Default is utf8. 
 * _logger_ the logger you want to use. Default is an internal logger using sys.log.
 * _headers_ a hash with the headers you want to use for each request.
 
-This calls returns a Request object. On that request object you can call methods for each supported HTTP verb.
+The createClient call returns a Request object. On that request object you can call methods for each supported HTTP verb.
 
 ### client.get(url[, customHeaders])
 
@@ -90,7 +91,7 @@ Creates a HTTP HEAD request
 
 The customHeaders hash contains a set of HTTP headers which should be added to a request. They are optional. A working example would be:
 
-    customHeaders = { 'User-Agent': 'Foo', 'Accept: 'text/html' };
+    customHeaders = { 'User-Agent': 'Foo', 'Accept': 'text/html' };
 
 ### Listeners
 
@@ -166,13 +167,14 @@ To run the unit tests, nodeunit and log4js-node are required. You can install th
 
 There's a Makefile to run the tests:
 
-make test
+    make test
 
 TODO:
 -----
 
 * Get rid of logging statements
 * Add plugin infrastructure
+* More configurable redirect following (set max. redirect count, disable following of redirect)
 * Pluggable logger support
 * Pluggable support for transparent content decoders
 
