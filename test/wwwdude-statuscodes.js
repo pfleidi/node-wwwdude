@@ -6,14 +6,14 @@ statusCodes = require('../lib/httpcodes').codes;
 
 Log4js.addAppender(Log4js.consoleAppender());
 var logger = Log4js.getLogger('wwwdude-statuscodes');
-logger.setLevel('INFO');
+logger.setLevel('ERROR');
 
 client = HttpClient.createClient({
-    logger: logger
+    logger: logger,
+    followRedirect: false
   });
 
 function _testStatus(test, verb, statusCode) {
-  logger.info('Testing Code: ' + statusCode);
   var echoServer = Helper.echoServer(),
   upCase = verb.replace(/del/, 'delete').toUpperCase();
   test.expect(10);
@@ -48,10 +48,12 @@ function _testStatus(test, verb, statusCode) {
 
 }
 
-exports.simpleTests = {
-  get: function (test) {
-    Object.keys(statusCodes).forEach(function (code) {
-        _testStatus(test, 'get', code);
-      });
-  }
-};
+var tests = {};
+
+Object.keys(statusCodes).forEach(function (code) {
+      tests[code] = function (test) {
+      _testStatus(test, 'get', code);
+    };
+  });
+
+exports.simpleTests = tests;
