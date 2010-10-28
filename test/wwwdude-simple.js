@@ -17,7 +17,7 @@ function _simple(test, verb) {
   test.expect(10);
 
   var req = client[verb](echoServer.url + '/foo')
-  .addListener('2XX', function (data, resp) {
+  .on('2XX', function (data, resp) {
       var req = JSON.parse(data);
       test.ok(data, 'Data must be provided');
       test.ok(resp, 'Response must be provided');
@@ -25,13 +25,15 @@ function _simple(test, verb) {
       test.strictEqual(req.url, '/foo');
       test.strictEqual(req.headers['user-agent'], 'node-wwwdude');
     })
-  .addListener('success', function (data, resp) {
+  .on('success', function (data, resp) {
       var req = JSON.parse(data);
       test.ok(data, 'Data must be provided');
       test.ok(resp, 'Response must be provided');
       test.strictEqual(req.method, upCase);
       test.strictEqual(req.url, '/foo');
       test.strictEqual(req.headers['user-agent'], 'node-wwwdude');
+    })
+  .on('complete', function (data, resp) {
       test.done();
     }).send();
 
@@ -82,7 +84,7 @@ function _header(test, verb) {
   } else {
     req = client2[verb](echoServer.url + url, undefined, clientHeader);
   }
-  req.addListener('success', function (data, resp) {
+  req.on('success', function (data, resp) {
       var response = JSON.parse(data);
       test.ok(data, 'Data must be provided');
       test.ok(resp, 'Response must be provided');
@@ -90,6 +92,8 @@ function _header(test, verb) {
       test.strictEqual(response.url, url);
       test.strictEqual(response.headers['user-agent'], agent);
       test.strictEqual(response.headers.accept, 'foo/bar');
+    })
+  .on('complete', function (data, resp) {
       test.done();
     }).send();
 
@@ -119,12 +123,14 @@ exports.headRequest = function (test) {
   test.expect(5);
 
   var req = client.head(echoServer.url + '/foo')
-  .addListener('success', function (data, resp) {
+  .on('success', function (data, resp) {
       test.ok(resp, 'Response must be provided');
       test.strictEqual('', '', 'Data should be empty');
       test.strictEqual(resp.headers['content-type'], 'text/plain');
       test.strictEqual(resp.headers['x-foo-bar'], '2342asdf');
       test.strictEqual(resp.headers['connection'], 'close');
+    })
+  .on('complete', function (data, resp) {
       test.done();
     }).send();
 
