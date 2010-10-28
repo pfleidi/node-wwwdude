@@ -32,7 +32,7 @@ Usage
 A working example:
 
     var sys = require('sys'),
-        wwdude = require('node-wwwdude');
+        wwwdude = require('wwwdude');
 
     var client = wwwdude.createClient({
         headers: { 'User-Agent': 'fucking magnets' },
@@ -151,6 +151,10 @@ Every request call returns a Request object that emits events. You can add liste
 To register for an event, you can use the addListener() method.
 
     request.addListener(event, function (data, response) { doSomeThing(); });
+
+There is also a shorter alternative method called on():
+
+    request.on(event, function (data, response) { doSomeThing(); });
 
 Tha passed callback function takes two parameters: data and response. Data contains the content returned from the server. Request is a instance of node's [http.ClientResponse](http://nodejs.org/api.html#http-clientresponse-200).
 
