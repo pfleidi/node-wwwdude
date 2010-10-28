@@ -18,11 +18,11 @@ function _redirect(test, verb) {
   test.expect(20);
 
   var req = client[verb](server.url)
-  .addListener('301', function (data, resp) {
+  .on('301', function (data, resp) {
       test.ok(data);
       test.ok(resp);
     })
-  .addListener('redirect', function (data, resp) {
+  .on('redirect', function (data, resp) {
       var response = JSON.parse(data);
       test.ok(data, 'Data must be provided');
       test.ok(resp);
@@ -32,15 +32,15 @@ function _redirect(test, verb) {
       test.strictEqual(response.headers['user-agent'], 'node-wwwdude');
       test.strictEqual(response.msg, 'Redirecting');
     })
-  .addListener('200', function (data, resp) {
+  .on('200', function (data, resp) {
       test.ok(data);
       test.ok(resp);
     })
-  .addListener('2XX', function (data, resp) {
+  .on('2XX', function (data, resp) {
       test.ok(data);
       test.ok(resp);
     })
-  .addListener('success', function (data, resp) {
+  .on('success', function (data, resp) {
       var response = JSON.parse(data);
       test.ok(data, 'Data must be provided');
       test.ok(resp);
