@@ -79,7 +79,7 @@ function _header(test, verb) {
   };
   test.expect(6);
 
-  if (verb === 'get' || verb === 'delete') {
+  if (verb === 'get' || verb === 'del') {
     req = client2[verb](echoServer.url + url, clientHeader);
   } else {
     req = client2[verb](echoServer.url + url, undefined, clientHeader);
