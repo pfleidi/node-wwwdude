@@ -1,24 +1,19 @@
 var Helper = require('./test_helper'),
 Sys = require('sys'),
 HttpClient = require('../index'),
-Log4js = require('log4js');
 
-Log4js.addAppender(Log4js.consoleAppender());
-var logger = Log4js.getLogger('wwwdude-redirect'),
 client = HttpClient.createClient({
-    logger: logger,
     followRedirect: true
   });
 
-logger.setLevel('INFO');
-
 function _redirect(test, verb) {
+  test.expect(20);
+  
   var server = Helper.redirectServer(),
   upCase = verb.replace(/del/, 'delete').toUpperCase();
 
-  test.expect(20);
 
-  var req = client[verb](server.url)
+  client[verb](server.url)
   .on('301', function (data, resp) {
       test.ok(data);
       test.ok(resp);
@@ -76,7 +71,6 @@ exports.simpleRedirect = {
 
 
 var client2 = HttpClient.createClient({
-    logger: logger,
     followRedirect: false
   });
 
@@ -86,7 +80,7 @@ function _redirectFail(test, verb) {
 
   test.expect(9);
 
-  var req = client2[verb](server.url)
+  client2[verb](server.url)
   .on('301', function (data, resp) {
       test.ok(data);
       test.ok(resp);

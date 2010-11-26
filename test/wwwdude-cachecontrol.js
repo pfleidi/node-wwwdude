@@ -1,23 +1,22 @@
+/*
+ * unit test for checking behavior on HTTP status code 304
+ */
+
 var Helper = require('./test_helper'),
 Sys = require('sys'),
 HttpClient = require('../index'),
-Log4js = require('log4js');
-
-Log4js.addAppender(Log4js.consoleAppender());
-var logger = Log4js.getLogger('wwwdude-cachecontrol');
-logger.setLevel('INFO');
 
 client = HttpClient.createClient({
-    logger: logger,
     headers: { 'x-give-me-status-dude': 304 }
   });
 
 function _notModified(test, verb) {
-  var echoServer = Helper.echoServer(),
-  upCase = verb.replace(/del/, 'delete').toUpperCase();
   test.expect(11);
 
-  var req = client[verb](echoServer.url + '/foo')
+  var echoServer = Helper.echoServer(),
+  upCase = verb.replace(/del/, 'delete').toUpperCase();
+
+  client[verb](echoServer.url + '/foo')
   .addListener('not-modified', function (data, resp) {
       test.ok(data, 'Data must be provided')
       test.ok(resp, 'Response must be provided')
@@ -43,7 +42,6 @@ function _notModified(test, verb) {
   setTimeout(function () {
       test.done();
     }, 1000);
-
 }
 
 exports.test304 = {

@@ -1,22 +1,15 @@
 var Helper = require('./test_helper'),
 Sys = require('sys'),
 HttpClient = require('../index'),
-Log4js = require('log4js');
 
-Log4js.addAppender(Log4js.consoleAppender());
-var logger = Log4js.getLogger('wwwdude-simple');
-logger.setLevel('INFO');
-
-client = HttpClient.createClient({
-    logger: logger
-  });
+client = HttpClient.createClient();
 
 function _simple(test, verb) {
   var echoServer = Helper.echoServer(),
   upCase = verb.replace(/del/, 'delete').toUpperCase();
   test.expect(10);
 
-  var req = client[verb](echoServer.url + '/foo')
+  client[verb](echoServer.url + '/foo')
   .on('2XX', function (data, resp) {
       var req = JSON.parse(data);
       test.ok(data, 'Data must be provided');
@@ -60,8 +53,6 @@ exports.simpleTests = {
 
 
 var client2 = HttpClient.createClient({
-    logger: logger,
-
     headers: {
       'Accept': 'foo/bar'
     }
@@ -122,7 +113,7 @@ exports.headRequest = function (test) {
   var echoServer = Helper.echoServer();
   test.expect(5);
 
-  var req = client.head(echoServer.url + '/foo')
+  client.head(echoServer.url + '/foo')
   .on('success', function (data, resp) {
       test.ok(resp, 'Response must be provided');
       test.strictEqual('', '', 'Data should be empty');
