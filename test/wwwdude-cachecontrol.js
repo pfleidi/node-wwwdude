@@ -1,5 +1,7 @@
 /*
  * unit test for checking behavior on HTTP status code 304
+ *
+ * @author pfleidi
  */
 
 var Helper = require('./test_helper'),
@@ -58,4 +60,3 @@ exports.test304 = {
     _notModified(test, 'del');
   }
 };
-

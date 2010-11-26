@@ -1,3 +1,10 @@
+/*!
+ * unit tests to ensure all handlers for HTTP status codes
+ * are called correctly
+ *
+ * @author pfleidi
+ */
+
 var Helper = require('./test_helper'),
 Sys = require('sys'),
 HttpClient = require('../index'),
@@ -8,9 +15,10 @@ client = HttpClient.createClient({
   });
 
 function _testStatus(test, verb, statusCode) {
+  test.expect(10);
+
   var echoServer = Helper.echoServer(),
   upCase = verb.replace(/del/, 'delete').toUpperCase();
-  test.expect(10);
 
   client[verb](echoServer.url + '/foo', {
       'x-give-me-status-dude': statusCode

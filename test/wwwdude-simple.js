@@ -1,3 +1,9 @@
+/*!
+ * unit tests to ensure simple use cases work as expected
+ *
+ * @author pfleidi
+ */
+
 var Helper = require('./test_helper'),
 Sys = require('sys'),
 HttpClient = require('../index'),
@@ -51,13 +57,9 @@ exports.simpleTests = {
   }
 };
 
-
 var client2 = HttpClient.createClient({
-    headers: {
-      'Accept': 'foo/bar'
-    }
+    headers: { 'Accept': 'foo/bar' }
   });
-
 
 function _header(test, verb) {
   var echoServer = Helper.echoServer(),
@@ -128,7 +130,6 @@ exports.headRequest = function (test) {
   setTimeout(function () {
       test.done();
     }, 500);
-
 };
 
 

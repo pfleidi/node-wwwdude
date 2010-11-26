@@ -1,3 +1,9 @@
+/*!
+ * unit tests to ensure redirecting works as expected
+ *
+ * @author pfleidi
+ */
+
 var Helper = require('./test_helper'),
 Sys = require('sys'),
 HttpClient = require('../index'),

@@ -1,17 +1,16 @@
+/*!
+ * unit tests to ensure error handling works as expected
+ *
+ * @author pfleidi
+ */
+
 var Helper = require('./test_helper'),
 Sys = require('sys'),
 HttpClient = require('../index'),
-Log4js = require('log4js'),
-statusCodes = require('../lib/httpcodes').codes;
 
-Log4js.addAppender(Log4js.consoleAppender());
-var logger = Log4js.getLogger('wwwdude-statuscodes'),
 client = HttpClient.createClient({
-    logger: logger,
-    headers: {'x-give-me-status-dude': 500}
+    headers: { 'x-give-me-status-dude': 500 }
   });
-
-logger.setLevel('INFO');
 
 function _testError(test, verb, payload) {
   var echoServer = Helper.echoServer(),
@@ -32,7 +31,7 @@ function _testError(test, verb, payload) {
       test.strictEqual(req.url, '/foo');
       test.strictEqual(req.headers['user-agent'], 'node-wwwdude');
       if (payload) {
-        test.strictEqual(req.payload, 'TEST123');
+        test.strictEqual(req.payload, payload);
       }
     })
   .on('internal-server-error', function (data, resp) {
@@ -50,15 +49,15 @@ function _testError(test, verb, payload) {
     }, 500);
 }
 
-exports.errorTests = {
+exports.testServerErrors = {
   get: function (test) {
     _testError(test, 'get');
   },
   put: function (test) {
-    _testError(test, 'put', 'TEST123');
+    _testError(test, 'put', 'ASADAldfjsl');
   },
   post: function (test) {
-    _testError(test, 'post', 'TEST123');
+    _testError(test, 'post', 'HurrDurrDerp!');
   },
   del: function (test) {
     _testError(test, 'del');
