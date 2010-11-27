@@ -43,6 +43,9 @@ A working example:
           sys.puts('Error for: ' + resp.host + ' code: ' + resp.statusCode); 
           sys.puts('Headers: ' + sys.inspect(resp.headers));
         })
+      .addListener('network-error', function (err) {
+          sys.puts('Network Error: ' + sys.inspect(err));
+        })
       .addListener('redirect', function (data, resp) {
           sys.puts('Redirecting to: ' + resp.headers['location']);
           sys.puts('Headers: ' + sys.inspect(resp.headers));
@@ -176,7 +179,6 @@ There's a Makefile to run the tests:
 TODO:
 -----
 
-* Get rid of logging statements
 * Add plugin infrastructure
 * More configurable redirect following (set max. redirect count, disable following of redirect)
 * Pluggable logger support
