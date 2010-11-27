@@ -14,7 +14,6 @@ function _testClientErrs(test, toCompare, url) {
 
   client.get(url)
   .on('network-error', function (msg) {
-      console.dir(msg);
       test.ok(msg);
       test.strictEqual(msg.errno, toCompare);
       test.done();
