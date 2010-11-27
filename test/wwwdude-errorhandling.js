@@ -5,7 +5,6 @@
  */
 
 var Helper = require('./test_helper'),
-Sys = require('sys'),
 HttpClient = require('../index'),
 
 client = HttpClient.createClient({
