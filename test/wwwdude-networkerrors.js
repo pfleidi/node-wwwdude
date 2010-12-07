@@ -13,7 +13,7 @@ function _testClientErrs(test, toCompare, url) {
   var client = HttpClient.createClient();
 
   client.get(url)
-  .on('network-error', function (msg) {
+  .on('error', function (msg) {
       test.ok(msg);
       test.strictEqual(msg.errno, toCompare);
       test.done();
