@@ -16,15 +16,16 @@ function _testError(test, verb, payload) {
   upCase = verb.replace(/del/, 'delete').toUpperCase();
 
   if (payload) {
-    test.expect(7);
+    test.expect(8);
   } else {
-    test.expect(6);
+    test.expect(7);
   }
 
   client[verb](echoServer.url + '/foo', payload)
-  .on('error', function (data) {
+  .on('http-server-error', function (data, response) {
       var req = JSON.parse(data);
       test.ok(data, 'Data must be provided');
+      test.ok(response, 'Response must be provided');
       test.strictEqual(req.method, upCase);
       test.strictEqual(req.url, '/foo');
       test.strictEqual(req.headers['user-agent'], 'node-wwwdude');
