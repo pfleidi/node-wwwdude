@@ -7,21 +7,25 @@
 var Helper = require('./test_helper'),
 HttpClient = require('../index'),
 
-client = HttpClient.createClient({
-    headers: { 'x-give-me-status-dude': 500 }
+client500 = HttpClient.createClient({
+    headers: { 'x-give-me-status-dude': 500 } 
+  }),
+
+client400 = HttpClient.createClient({
+    headers: { 'x-give-me-status-dude': 400 } 
   });
 
-function _testError(test, verb, payload) {
+function _testServerError(test, verb, payload) {
   var echoServer = Helper.echoServer(),
   upCase = verb.replace(/del/, 'delete').toUpperCase();
 
   if (payload) {
-    test.expect(8);
+    test.expect(10);
   } else {
-    test.expect(7);
+    test.expect(9);
   }
 
-  client[verb](echoServer.url + '/foo', payload)
+  client500[verb](echoServer.url + '/foo', payload)
   .on('http-server-error', function (data, response) {
       var req = JSON.parse(data);
       test.ok(data, 'Data must be provided');
@@ -36,6 +40,12 @@ function _testError(test, verb, payload) {
   .on('internal-server-error', function (data, resp) {
       test.ok(data, 'Data must be provided');
     })
+  .on('http-server-error', function (data, resp) {
+      test.ok(data, 'Data must be provided');
+    })
+  .on('http-error', function (data, resp) {
+      test.ok(data, 'Data must be provided');
+    })
   .on('5XX', function (data, resp) {
       test.ok(data, 'Data must be provided');
     })
@@ -48,17 +58,76 @@ function _testError(test, verb, payload) {
     }, 500);
 }
 
+function _testClientError(test, verb, payload) {
+  var echoServer = Helper.echoServer(),
+  upCase = verb.replace(/del/, 'delete').toUpperCase();
+
+  if (payload) {
+    test.expect(10);
+  } else {
+    test.expect(9);
+  }
+
+  client400[verb](echoServer.url + '/foo', payload)
+  .on('http-client-error', function (data, response) {
+      var req = JSON.parse(data);
+      test.ok(data, 'Data must be provided');
+      test.ok(response, 'Response must be provided');
+      test.strictEqual(req.method, upCase);
+      test.strictEqual(req.url, '/foo');
+      test.strictEqual(req.headers['user-agent'], 'node-wwwdude');
+      if (payload) {
+        test.strictEqual(req.payload, payload);
+      }
+    })
+  .on('bad-request', function (data, resp) {
+      test.ok(data, 'Data must be provided');
+    })
+  .on('http-client-error', function (data, resp) {
+      test.ok(data, 'Data must be provided');
+    })
+  .on('http-error', function (data, resp) {
+      test.ok(data, 'Data must be provided');
+    })
+  .on('4XX', function (data, resp) {
+      test.ok(data, 'Data must be provided');
+    })
+  .on('complete', function (data, resp) {
+      test.done();
+    }).send();
+
+  setTimeout(function () {
+      test.done();
+    }, 500);
+}
+
+
 exports.testServerErrors = {
   get: function (test) {
-    _testError(test, 'get');
+    _testServerError(test, 'get');
   },
   put: function (test) {
-    _testError(test, 'put', 'ASADAldfjsl');
+    _testServerError(test, 'put', 'ASADAldfjsl');
   },
   post: function (test) {
-    _testError(test, 'post', 'HurrDurrDerp!');
+    _testServerError(test, 'post', 'HurrDurrDerp!');
   },
   del: function (test) {
-    _testError(test, 'del');
+    _testServerError(test, 'del');
+  }
+};
+
+exports.testClientErrors = {
+  get: function (test) {
+    _testClientError(test, 'get');
+  },
+  put: function (test) {
+    _testClientError(test, 'put', 'ASADAldfjsl');
+  },
+  post: function (test) {
+    _testClientError(test, 'post', 'HurrDurrDerp!');
+  },
+  del: function (test) {
+    _testClientError(test, 'del');
   }
 };
