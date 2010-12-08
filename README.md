@@ -64,6 +64,7 @@ Creates a new client object with predefined options for each request made with t
 #### options hash
 
 * _encoding_ content encoding. e.g. binary or utf8. Default is utf8. 
+* _followRedirect_ boolean value which enables/disables automatic redirect following. Default is true.
 * _headers_ a hash with the headers you want to use for each request.
 
 The createClient call returns a Request object. On this object you can call a method for each supported HTTP verb.
@@ -169,9 +170,9 @@ The send() call actually sends the request. The handlers are called when the req
 Tests
 -----
 
-To run the unit tests, nodeunit and log4js-node are required. You can install them via npm:
+To run the unit tests, nodeunit is required. You can install it via npm:
 
-    npm install nodeunit log4js
+    npm install nodeunit 
 
 There's a Makefile to run the tests:
 
