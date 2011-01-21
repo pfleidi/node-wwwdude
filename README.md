@@ -16,7 +16,8 @@ Features
 --------
 
 * Very customizable (custom headers on client/request basis ...)
-* Auto follow redirect
+* Automatic redirect following
+* Automatic gzip decode support 
 * Flexible handling of responses with event emitters
 
 Installation
@@ -170,9 +171,9 @@ The send() call actually sends the request. The handlers are called when the req
 Tests
 -----
 
-To run the unit tests, nodeunit is required. You can install it via npm:
+To run the unit tests, nodeunit and connect are required. You can install it via npm:
 
-    npm install nodeunit 
+    npm install nodeunit connect
 
 There's a Makefile to run the tests:
 
@@ -181,9 +182,8 @@ There's a Makefile to run the tests:
 TODO:
 -----
 
-* Add plugin infrastructure
 * More configurable redirect following (set max. redirect count)
-* Pluggable support for transparent content decoders
+* Pluggable support for transparent content en/decoders
 
 License
 -------
