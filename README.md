@@ -58,7 +58,7 @@ A working example:
 API
 ---
 
-### wwwdude.createClient([options]) 
+### wwwdude.createClient([options]) or wwwdude([options])
 
 Creates a new client object with predefined options for each request made with this instance.
 
