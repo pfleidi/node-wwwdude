@@ -1,80 +1,336 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<a href="https://github.com/pfleidi/node-wwwdude"><img alt="Fork me on GitHub" id="ribbon" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a><html>
+	<head>
+		<title>wwwdude</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+		<style>body {
+    margin: 0;
+    padding: 0;
+    font: 14px/1.5 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+    color: #252519;
+}
+a {
+    color: #252519;
+}
+a:hover {
+    text-decoration: underline;
+    color: #19469D;
+}
+p {
+    margin: 12px 0;
+}
+h1, h2, h3 {
+    margin: 0;
+    padding: 0;
+}
+table#source {
+    width: 100%;
+    border-collapse: collapse;
+}
+table#source td:first-child {
+    padding: 30px 40px 30px 40px;
+    vertical-align: top;
+}
+table#source td:first-child,
+table#source td:first-child pre {
+    width: 450px;
+}
+table#source td:last-child {
+    padding: 30px 0 30px 40px;
+    border-left: 1px solid #E5E5EE;
+    background: #F5F5FF;
+}
+table#source tr {
+    border-bottom: 1px solid #E5E5EE;
+}
+table#source tr.filename {
+    padding-top: 40px;
+    border-top: 1px solid #E5E5EE;
+}
+table#source tr.filename td:first-child {
+    text-transform: capitalize;
+}
+table#source tr.filename td:last-child {
+    font-size: 12px;
+}
+table#source tr.filename h2 {
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+table#source tr.code h1,
+table#source tr.code h2,
+table#source tr.code h3 {
+    margin-top: 30px;
+    font-family: "Lucida Grande", "Helvetica Nueue", Arial, sans-serif;
+    font-size: 18px;
+}
+table#source tr.code h2 {
+    font-size: 16px;
+}
+table#source tr.code h3 {
+    font-size: 14px;
+}
+table#source tr.code ul {
+    margin: 15px 0 15px 35px;
+    padding: 0;
+}
+table#source tr.code ul li {
+    margin: 0;
+    padding: 1px 0;
+}
+table#source tr.code ul li p {
+    margin: 0;
+    padding: 0;
+}
+table#source tr.code td:first-child pre {
+    padding: 20px;
+}
+#ribbon {
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+code .string { color: #219161; }
+code .regexp { color: #219161; }
+code .keyword { color: #954121; }
+code .number { color: #19469D; }
+code .comment { color: #bbb; }
+code .this { color: #19469D; }</style>
+		<script>
+			$(function(){
+				$('tr.code').hide();
+				$('tr.filename').toggle(function(){
+					$(this).nextUntil('.filename').fadeIn();
+				}, function(){
+					$(this).nextUntil('.filename').fadeOut();
+				});
+			});
+		</script>
+	</head>
+	<body>
+<table id="source"><tbody><tr><td><h1>wwwdude</h1><p>wwwdude is a small and flexible http client library on top of node\'s http client</p></td><td></td></tr><tr class="filename"><td><h2 id="lib//httpcodes.js"><a href="#">httpcodes</a></h2></td><td>lib//httpcodes.js</td></tr><tr class="code">
+<td class="docs">
+<p>lookup table for all HTTP status codes</p>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<ul><li><p><strong>api</strong>: <em>public</em></p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">exports</span>.<span class="variable">codes</span> = {</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p> 1XX Informational </p>
+</td>
+<td class="code">
+<pre><code><span class="string">'100'</span>: <span class="string">'continue'</span>,
+  <span class="string">'101'</span>: <span class="string">'switching-protocols'</span>,</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p> 2XX Successful </p>
+</td>
+<td class="code">
+<pre><code><span class="string">'200'</span>: <span class="string">'ok'</span>,
+  <span class="string">'201'</span>: <span class="string">'created'</span>,
+  <span class="string">'202'</span>: <span class="string">'accepted'</span>,
+  <span class="string">'203'</span>: <span class="string">'non-authorative-information'</span>,
+  <span class="string">'204'</span>: <span class="string">'no-content'</span>,
+  <span class="string">'205'</span>: <span class="string">'reset-content'</span>,
+  <span class="string">'207'</span>: <span class="string">'partial-content'</span>,</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p> 3XX Redirection </p>
+</td>
+<td class="code">
+<pre><code><span class="string">'300'</span>: <span class="string">'multiple-choices'</span>,
+  <span class="string">'301'</span>: <span class="string">'moved-permanently'</span>,
+  <span class="string">'302'</span>: <span class="string">'found'</span>,
+  <span class="string">'303'</span>: <span class="string">'see-other'</span>,
+  <span class="string">'304'</span>: <span class="string">'not-modified'</span>,
+  <span class="string">'305'</span>: <span class="string">'use-proxy'</span>,
+  <span class="string">'307'</span>: <span class="string">'temporary-redirect'</span>,</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p> 4XX Client Error </p>
+</td>
+<td class="code">
+<pre><code><span class="string">'400'</span>: <span class="string">'bad-request'</span>,
+  <span class="string">'401'</span>: <span class="string">'unauthorized'</span>,
+  <span class="string">'402'</span>: <span class="string">'payment-required'</span>,
+  <span class="string">'403'</span>: <span class="string">'forbidden'</span>,
+  <span class="string">'404'</span>: <span class="string">'not-found'</span>,
+  <span class="string">'405'</span>: <span class="string">'method-not-allowed'</span>,
+  <span class="string">'406'</span>: <span class="string">'not-acceptable'</span>,
+  <span class="string">'407'</span>: <span class="string">'proxy-authentication-required'</span>,
+  <span class="string">'408'</span>: <span class="string">'request-timeout'</span>,
+  <span class="string">'409'</span>: <span class="string">'conflict'</span>,
+  <span class="string">'410'</span>: <span class="string">'gone'</span>,
+  <span class="string">'411'</span>: <span class="string">'length-required'</span>,
+  <span class="string">'412'</span>: <span class="string">'precondition-failed'</span>,
+  <span class="string">'413'</span>: <span class="string">'request-entity-too-large'</span>,
+  <span class="string">'414'</span>: <span class="string">'request-uri-too-long'</span>,
+  <span class="string">'415'</span>: <span class="string">'unsupported-media-type'</span>,
+  <span class="string">'416'</span>: <span class="string">'request-range-not-satisfiable'</span>,
+  <span class="string">'417'</span>: <span class="string">'expectation-failed'</span>,</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p> 5XX Server Error </p>
+</td>
+<td class="code">
+<pre><code><span class="string">'500'</span>: <span class="string">'internal-server-error'</span>,
+  <span class="string">'501'</span>: <span class="string">'not-implemented'</span>,
+  <span class="string">'502'</span>: <span class="string">'bad-gateway'</span>,
+  <span class="string">'503'</span>: <span class="string">'service-unavailable'</span>,
+  <span class="string">'504'</span>: <span class="string">'gateway-timeout'</span>,
+  <span class="string">'505'</span>: <span class="string">'http-version-not-supported'</span>
+};
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="lib//meta.js"><a href="#">meta</a></h2></td><td>lib//meta.js</td></tr><tr class="code">
+<td class="docs">
+<p>takes two objects and merges their attributes</p>
 
-	<title>pfleidi/node-wwwdude @ GitHub</title>
-	
-	<style type="text/css">
-		body {
-  		margin-top: 1.0em;
-  		background-color: #4de6a0;
-		  font-family: "Helvetica,Arial,FreeSans";
-  		color: #000000;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-		h1 { font-size: 3.8em; color: #b2195f; margin-bottom: 3px; }
-		h1 .small { font-size: 0.4em; }
-		h1 a { text-decoration: none }
-		h2 { font-size: 1.5em; color: #b2195f; }
-    h3 { text-align: center; color: #b2195f; }
-    a { color: #b2195f; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-		pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-	</style>
-	
-</head>
+<h2></h2>
 
-<body>
-  <a href="http://github.com/pfleidi/node-wwwdude"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+<ul><li><p><strong>param</strong>: <em>Object</em>  defaults</p></li><li><p><strong>param</strong>: <em>Object</em>  custom</p></li><li><p><strong>return</strong>: <em>Object</em>  new merged object</p></li><li><p><strong>api</strong>: <em>public</em></p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">exports</span>.<span class="variable">mergeAttributes</span> = <span class="keyword">function</span> (<span class="variable">defaults</span>, <span class="variable">custom</span>) {
+  <span class="keyword">var</span> <span class="variable">obj</span> = {};
 
-  <div id="container">
-
-    <div class="download">
-      <a href="http://github.com/pfleidi/node-wwwdude/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/pfleidi/node-wwwdude/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
-    </div>
-
-    <h1><a href="http://github.com/pfleidi/node-wwwdude">node-wwwdude</a>
-      <span class="small">by <a href="http://github.com/pfleidi">pfleidi</a></span></h1>
-
-    <div class="description">
-      A flexible HTTP client library for node.js
-    </div>
-
-    <h2>Authors</h2>
-<p>Sven Pfleiderer (sg+github@roothausen.de)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Sven Pfleiderer (sg+github@roothausen.de)<br/>      </p>
-
-
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/pfleidi/node-wwwdude/zipball/master">zip</a> or
-      <a href="http://github.com/pfleidi/node-wwwdude/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/pfleidi/node-wwwdude</pre>
-    </p>
-
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/pfleidi/node-wwwdude">pfleidi/node-wwwdude</a>
-    </div>
-
-  </div>
-
+  <span class="class">Object</span>.<span class="variable">keys</span>(<span class="variable">defaults</span>).<span class="variable">forEach</span>(<span class="keyword">function</span> (<span class="variable">key</span>) {
+      <span class="variable">obj</span>[<span class="variable">key</span>] = <span class="variable">defaults</span>[<span class="variable">key</span>];
+    });
   
-</body>
-</html>
+  <span class="keyword">if</span> (!<span class="variable">custom</span>) {
+    <span class="keyword">return</span> <span class="variable">obj</span>;
+  }
+
+  <span class="class">Object</span>.<span class="variable">keys</span>(<span class="variable">custom</span>).<span class="variable">forEach</span>(<span class="keyword">function</span> (<span class="variable">key</span>) {
+    <span class="variable">obj</span>[<span class="variable">key</span>] = <span class="variable">custom</span>[<span class="variable">key</span>]; 
+  });
+
+  <span class="keyword">return</span> <span class="variable">obj</span>;
+};
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="lib//wwwdude.js"><a href="#">wwwdude</a></h2></td><td>lib//wwwdude.js</td></tr><tr class="code">
+<td class="docs">
+<p> Module dependencies </p>
+</td>
+<td class="code">
+<pre><code><span class="keyword">var</span> <span class="class">Sys</span> = <span class="variable">require</span>(<span class="string">'sys'</span>);
+<span class="keyword">var</span> <span class="class">Http</span> = <span class="variable">require</span>(<span class="string">'http'</span>);
+<span class="keyword">var</span> <span class="class">Meta</span> = <span class="variable">require</span>(<span class="string">'./meta'</span>);
+<span class="keyword">var</span> <span class="class">Url</span> = <span class="variable">require</span>(<span class="string">'url'</span>);
+<span class="keyword">var</span> <span class="class">EventEmitter</span> = <span class="variable">require</span>(<span class="string">'events'</span>).<span class="class">EventEmitter</span>;
+<span class="keyword">var</span> <span class="variable">statusCodes</span> = <span class="variable">require</span>(<span class="string">'./httpcodes'</span>).<span class="variable">codes</span>;
+<span class="keyword">var</span> <span class="class">Child_process</span> = <span class="variable">require</span>(<span class="string">'child_process'</span>);
+
+<span class="keyword">var</span> <span class="variable">defaultHeaders</span> = {
+  <span class="string">'User-Agent'</span>: <span class="string">'node-wwwdude'</span>,
+  <span class="string">'Accept-Encoding'</span>: <span class="string">'gzip'</span>
+};</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Factory method to initalize a client</p>
+
+<h2></h2>
+
+<ul><li><p><strong>return</strong>: <em>Object</em> </p></li><li><p><strong>api</strong>: <em>public</em></p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="keyword">var</span> <span class="variable">createClient</span> = <span class="variable">exports</span>.<span class="variable">createClient</span> = <span class="keyword">function</span> <span class="variable">createClient</span>(<span class="variable">clientOptions</span>) {
+  <span class="variable">clientOptions</span> = <span class="variable">clientOptions</span> || {};
+
+  <span class="keyword">var</span> <span class="variable">encoding</span> = <span class="variable">clientOptions</span>.<span class="variable">encoding</span> || <span class="string">'utf8'</span>;
+  <span class="keyword">var</span> <span class="variable">clientHeaders</span> = <span class="class">Meta</span>.<span class="variable">mergeAttributes</span>(<span class="variable">defaultHeaders</span>, <span class="variable">clientOptions</span>.<span class="variable">headers</span>);
+
+  <span class="keyword">if</span> (<span class="variable">clientOptions</span>.<span class="variable">compress</span>) {
+    <span class="variable">clientHeaders</span>[<span class="string">'Accept-Encoding'</span>] = <span class="string">'gzip'</span>;
+  }</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p> Inherit from EventEmitter </p>
+</td>
+<td class="code">
+<pre><code><span class="class">Sys</span>.<span class="variable">inherits</span>(<span class="class">Request</span>, <span class="class">EventEmitter</span>);</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Execute a prepared HTTP request</p>
+
+<h2></h2>
+
+<ul><li><p><strong>return</strong>: <em>undefined</em> </p></li><li><p><strong>api</strong>: <em>public</em></p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Request</span>.<span class="variable">prototype</span>.<span class="variable">send</span> = <span class="keyword">function</span> () {
+    <span class="this">this</span>.<span class="variable">request</span>.<span class="variable">end</span>();
+  };</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p> return the actual API </p>
+</td>
+<td class="code">
+<pre><code><span class="keyword">return</span> {
+
+    <span class="variable">get</span>: <span class="keyword">function</span> (<span class="variable">url</span>, <span class="variable">requestHeaders</span>) {
+      <span class="keyword">var</span> <span class="variable">headers</span> = <span class="class">Meta</span>.<span class="variable">mergeAttributes</span>(<span class="variable">clientHeaders</span>, <span class="variable">requestHeaders</span>);
+      <span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Request</span>(<span class="string">'GET'</span>, <span class="variable">url</span>, { <span class="variable">headers</span>: <span class="variable">headers</span> });
+    },
+
+    <span class="variable">post</span>: <span class="keyword">function</span> (<span class="variable">url</span>, <span class="variable">payload</span>, <span class="variable">requestHeaders</span>) {
+      <span class="keyword">var</span> <span class="variable">headers</span> = <span class="class">Meta</span>.<span class="variable">mergeAttributes</span>(<span class="variable">clientHeaders</span>, <span class="variable">requestHeaders</span>);
+      <span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Request</span>(<span class="string">'POST'</span>, <span class="variable">url</span>, { <span class="variable">headers</span>: <span class="variable">headers</span>, <span class="variable">payload</span>: <span class="variable">payload</span> });
+    },
+
+    <span class="variable">put</span>: <span class="keyword">function</span> (<span class="variable">url</span>, <span class="variable">payload</span>, <span class="variable">requestHeaders</span>) {
+      <span class="keyword">var</span> <span class="variable">headers</span> = <span class="class">Meta</span>.<span class="variable">mergeAttributes</span>(<span class="variable">clientHeaders</span>, <span class="variable">requestHeaders</span>);
+      <span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Request</span>(<span class="string">'PUT'</span>, <span class="variable">url</span>, { <span class="variable">headers</span>: <span class="variable">headers</span>, <span class="variable">payload</span>: <span class="variable">payload</span> });
+    },
+
+    <span class="variable">del</span>: <span class="keyword">function</span> (<span class="variable">url</span>, <span class="variable">requestHeaders</span>) {
+      <span class="keyword">var</span> <span class="variable">headers</span> = <span class="class">Meta</span>.<span class="variable">mergeAttributes</span>(<span class="variable">clientHeaders</span>, <span class="variable">requestHeaders</span>);
+      <span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Request</span>(<span class="string">'DELETE'</span>, <span class="variable">url</span>, { <span class="variable">headers</span>: <span class="variable">headers</span> });
+    },
+
+    <span class="variable">head</span>: <span class="keyword">function</span> (<span class="variable">url</span>, <span class="variable">requestHeaders</span>) {
+      <span class="keyword">var</span> <span class="variable">headers</span> = <span class="class">Meta</span>.<span class="variable">mergeAttributes</span>(<span class="variable">clientHeaders</span>, <span class="variable">requestHeaders</span>);
+      <span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Request</span>(<span class="string">'HEAD'</span>, <span class="variable">url</span>, { <span class="variable">headers</span>: <span class="variable">headers</span> });
+    }
+
+  };
+
+};</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>add support for require('wwwdude')(option)
+additionally to
+require('wwwdude').createClient(options)
+ </p>
+</td>
+<td class="code">
+<pre><code><span class="variable">createClient</span>.<span class="variable">createClient</span> = <span class="variable">createClient</span>;
+<span class="variable">module</span>.<span class="variable">exports</span> = <span class="variable">createClient</span>;
+</code></pre>
+</td>
+</tr>	</body>
+</html></tbody></table>
