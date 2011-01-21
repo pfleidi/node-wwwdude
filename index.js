@@ -1,7 +1,7 @@
 /*!
  * httpDude
  *
- * Copyright(c) 2010 Sven Pfleiderer.
+ * Copyright(c) 2011 Sven Pfleiderer.
  * MIT Licensed
  */
 
