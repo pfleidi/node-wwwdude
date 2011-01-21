@@ -4,15 +4,13 @@
  * @author pfleidi
  */
 
-var Helper = require('./test_helper'),
-Sys = require('sys'),
-HttpClient = require('../index'),
-
-client = HttpClient.createClient();
+var Helper = require('./test_helper');
+var HttpClient = require('../index');
+var client = HttpClient.createClient();
 
 function _simple(test, verb) {
-  var echoServer = Helper.echoServer(),
-  upCase = verb.replace(/del/, 'delete').toUpperCase();
+  var echoServer = Helper.echoServer();
+  var upCase = verb.replace(/del/, 'delete').toUpperCase();
   test.expect(10);
 
   client[verb](echoServer.url + '/foo')
@@ -62,12 +60,12 @@ var client2 = HttpClient.createClient({
   });
 
 function _header(test, verb) {
-  var echoServer = Helper.echoServer(),
-  upCase = verb.replace(/del/, 'delete').toUpperCase(),
-  url = '/foo?hello=world&bar&blubb#12345',
-  agent = 'testagent',
-  req,
-  clientHeader = {
+  var echoServer = Helper.echoServer();
+  var upCase = verb.replace(/del/, 'delete').toUpperCase();
+  var url = '/foo?hello=world&bar&blubb#12345';
+  var agent = 'testagent';
+  var req;
+  var clientHeader = {
     'User-Agent': agent
   };
   test.expect(6);
@@ -119,9 +117,9 @@ exports.headRequest = function (test) {
   .on('success', function (data, resp) {
       test.ok(resp, 'Response must be provided');
       test.strictEqual('', '', 'Data should be empty');
-      test.strictEqual(resp.headers['content-type'], 'text/plain');
+      test.strictEqual(resp.headers['content-type'], 'application/json');
       test.strictEqual(resp.headers['x-foo-bar'], '2342asdf');
-      test.strictEqual(resp.headers['connection'], 'close');
+      test.strictEqual(resp.headers.connection, 'close');
     })
   .on('complete', function (data, resp) {
       test.done();

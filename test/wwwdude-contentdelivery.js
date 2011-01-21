@@ -5,16 +5,15 @@
  * @author pfleidi
  */
 
-var Helper = require('./test_helper'),
-Sys = require('sys'),
-HttpClient = require('../index'),
-client = HttpClient.createClient();
+var Helper = require('./test_helper');
+var HttpClient = require('../index');
+var client = HttpClient.createClient();
 
 function _testWithPayload(test, verb, payload) {
   test.expect(7);
 
-  var echoServer = Helper.echoServer(),
-  upCase = verb.toUpperCase();
+  var echoServer = Helper.echoServer();
+  var upCase = verb.toUpperCase();
 
   client[verb](echoServer.url + '/foo', payload)
   .on('success', function (data, resp) {

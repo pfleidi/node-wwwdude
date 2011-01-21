@@ -4,20 +4,20 @@
  * @author pfleidi
  */
 
-var Helper = require('./test_helper'),
-HttpClient = require('../index'),
+var Helper = require('./test_helper');
+var HttpClient = require('../index');
 
-client500 = HttpClient.createClient({
+var client500 = HttpClient.createClient({
     headers: { 'x-give-me-status-dude': 500 } 
-  }),
+  });
 
-client400 = HttpClient.createClient({
+var client400 = HttpClient.createClient({
     headers: { 'x-give-me-status-dude': 400 } 
   });
 
 function _testServerError(test, verb, payload) {
-  var echoServer = Helper.echoServer(),
-  upCase = verb.replace(/del/, 'delete').toUpperCase();
+  var echoServer = Helper.echoServer();
+  var upCase = verb.replace(/del/, 'delete').toUpperCase();
 
   if (payload) {
     test.expect(10);
@@ -59,8 +59,8 @@ function _testServerError(test, verb, payload) {
 }
 
 function _testClientError(test, verb, payload) {
-  var echoServer = Helper.echoServer(),
-  upCase = verb.replace(/del/, 'delete').toUpperCase();
+  var echoServer = Helper.echoServer();
+  var upCase = verb.replace(/del/, 'delete').toUpperCase();
 
   if (payload) {
     test.expect(10);

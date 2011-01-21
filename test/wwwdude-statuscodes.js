@@ -5,12 +5,11 @@
  * @author pfleidi
  */
 
-var Helper = require('./test_helper'),
-Sys = require('sys'),
-HttpClient = require('../index'),
-statusCodes = require('../lib/httpcodes').codes,
+var Helper = require('./test_helper');
+var HttpClient = require('../index');
+var statusCodes = require('../lib/httpcodes').codes;
 
-client = HttpClient.createClient({
+var client = HttpClient.createClient({
     followRedirect: false
   });
 

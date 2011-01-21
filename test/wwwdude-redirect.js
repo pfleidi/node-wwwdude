@@ -4,11 +4,10 @@
  * @author pfleidi
  */
 
-var Helper = require('./test_helper'),
-Sys = require('sys'),
-HttpClient = require('../index'),
+var Helper = require('./test_helper');
+var HttpClient = require('../index');
 
-client = HttpClient.createClient({
+var client = HttpClient.createClient({
     followRedirect: true
   });
 
