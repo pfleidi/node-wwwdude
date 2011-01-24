@@ -1,6 +1,6 @@
 var Connect = require('connect');
 
-exports.port = 7000;
+exports.port = 23420;
 
 function _getRequestJSON(request) {
   var req = {
