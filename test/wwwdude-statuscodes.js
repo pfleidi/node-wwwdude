@@ -41,7 +41,7 @@ function _testStatus(test, verb, statusCode) {
       test.strictEqual(req.url, '/foo');
       test.strictEqual(req.headers['user-agent'], 'node-wwwdude');
       test.done();
-    }).send();
+    });
 
   setTimeout(function () {
       test.done();

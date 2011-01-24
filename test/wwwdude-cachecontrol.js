@@ -38,7 +38,7 @@ function _notModified(test, verb) {
       test.strictEqual(response.url, '/foo');
       test.strictEqual(response.headers['user-agent'], 'node-wwwdude');
       test.done();
-    }).send();
+    });
 
   setTimeout(function () {
       test.done();

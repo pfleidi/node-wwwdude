@@ -42,7 +42,7 @@ function _simple(test, verb, payload, mimetype, gzip) {
     })
   .on('complete', function (data, resp) {
       test.done();
-    }).send();
+    });
 
   setTimeout(function () {
       test.done();

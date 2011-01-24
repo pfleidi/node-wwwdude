@@ -28,7 +28,7 @@ function _testWithPayload(test, verb, payload) {
     })
   .on('complete', function (data, resp) {
       test.done();
-    }).send();
+    });
 
   setTimeout(function () {
       test.done();

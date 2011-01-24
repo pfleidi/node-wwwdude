@@ -20,7 +20,7 @@ function _testClientErrs(test, toCompare, url) {
     })
   .on('complete', function () {
       throw new Error('This should not happen');
-    }).send();
+    });
 
   setTimeout(function () {
       test.done();

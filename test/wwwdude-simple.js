@@ -32,7 +32,7 @@ function _simple(test, verb) {
     })
   .on('complete', function (data, resp) {
       test.done();
-    }).send();
+    });
 
   setTimeout(function () {
       test.done();
@@ -86,7 +86,7 @@ function _header(test, verb) {
     })
   .on('complete', function (data, resp) {
       test.done();
-    }).send();
+    });
 
   setTimeout(function () {
       test.done();
@@ -123,7 +123,7 @@ exports.headRequest = function (test) {
     })
   .on('complete', function (data, resp) {
       test.done();
-    }).send();
+    });
 
   setTimeout(function () {
       test.done();

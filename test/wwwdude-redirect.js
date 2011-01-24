@@ -51,7 +51,7 @@ function _redirect(test, verb) {
       test.strictEqual(response.headers['user-agent'], 'node-wwwdude');
       test.strictEqual(response.msg, 'Been there, done that!');
       test.done();
-    }).send();
+    });
 
   setTimeout(function () {
       test.done();
@@ -113,7 +113,7 @@ function _redirectFail(test, verb) {
       setTimeout(function () {
           test.done();
         }, 200);
-    }).send();
+    });
 
   setTimeout(function () {
       test.done();
