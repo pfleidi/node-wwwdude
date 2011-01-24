@@ -37,6 +37,7 @@ A working example:
 
     var client = wwwdude.createClient({
         headers: { 'User-Agent': 'wwwdude test 42' },
+        gzip: true
       });
 
     client.get('http://google.com/')
@@ -66,6 +67,7 @@ Creates a new client object with predefined options for each request made with t
 
 * _encoding_ content encoding. e.g. binary or utf8. Default is utf8. 
 * _followRedirect_ boolean value which enables/disables automatic redirect following. Default is true.
+* _gzip_ boolean value which enables/disables gzip compression
 * _headers_ a hash with the headers you want to use for each request.
 
 The createClient call returns a Request object. On this object you can call a method for each supported HTTP verb.
