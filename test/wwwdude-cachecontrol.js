@@ -4,6 +4,7 @@
  * @author pfleidi
  */
 
+var assert = require('assert');
 var Helper = require('./test_helper');
 var HttpClient = require('../index');
 
@@ -11,51 +12,54 @@ var client = HttpClient.createClient({
     headers: { 'x-give-me-status-dude': 304 }
   });
 
-function _notModified(test, verb) {
-  test.expect(11);
-
+function _notModified(beforeExit, verb) {
+  var callbacks = 0;
   var echoServer = Helper.echoServer();
   var upCase = verb.replace(/del/, 'delete').toUpperCase();
 
   client[verb](echoServer.url + '/foo')
   .addListener('not-modified', function (data, resp) {
-      test.ok(data, 'Data must be provided');
-      test.ok(resp, 'Response must be provided');
+      callbacks += 1;
+      assert.ok(data, 'Data must be provided');
+      assert.ok(resp, 'Response must be provided');
     })
   .addListener('3XX', function (data, resp) {
-      test.ok(data, 'Data must be provided');
-      test.ok(resp, 'Response must be provided');
+      callbacks += 1;
+      assert.ok(data, 'Data must be provided');
+      assert.ok(resp, 'Response must be provided');
     })
   .addListener('304', function (data, resp) {
-      test.ok(data, 'Data must be provided');
-      test.ok(resp, 'Response must be provided');
+      callbacks += 1;
+      assert.ok(data, 'Data must be provided');
+      assert.ok(resp, 'Response must be provided');
     })
   .addListener('complete', function (data, resp) {
+      callbacks += 1;
       var response = JSON.parse(data);
-      test.ok(data, 'Data must be provided');
-      test.ok(resp, 'Response must be provided');
-      test.strictEqual(response.method, upCase);
-      test.strictEqual(response.url, '/foo');
-      test.strictEqual(response.headers['user-agent'], 'node-wwwdude');
-      test.done();
+      assert.ok(data, 'Data must be provided');
+      assert.ok(resp, 'Response must be provided');
+      assert.strictEqual(response.method, upCase);
+      assert.strictEqual(response.url, '/foo');
+      assert.strictEqual(response.headers['user-agent'], 'node-wwwdude');
     });
 
-  setTimeout(function () {
-      test.done();
-    }, 1000);
+  beforeExit(function () {
+      assert.strictEqual(callbacks, 4, 'Ensure all callbacks are called');
+    });
 }
 
-exports.test304 = {
-  get: function (test) {
-    _notModified(test, 'get');
-  },
-  put: function (test) {
-    _notModified(test, 'put');
-  },
-  post: function (test) {
-    _notModified(test, 'post');
-  },
-  del: function (test) {
-    _notModified(test, 'del');
-  }
+exports.notModifiedGet = function (beforeExit) {
+  _notModified(beforeExit, 'get');
+};
+
+exports.notModifiedPut = function (beforeExit) {
+  _notModified(beforeExit, 'put');
+};
+
+exports.notModifiedPost = function (beforeExit) {
+  _notModified(beforeExit, 'post');
+};
+
+exports.notModifiedDel = function (beforeExit) {
+  _notModified(beforeExit, 'del');
 };

@@ -80,6 +80,10 @@ exports.redirectServer = function () {
     content.msg = 'Redirecting';
     response.write(JSON.stringify(content));
     response.end();
+
+    if (request.headers['x-no-redirect'] === 'yes') {
+      server.close();
+    }
   }
 
   var server = Connect.createServer(

@@ -5,6 +5,7 @@
  * @author pfleidi
  */
 
+var assert = require('assert');
 var Helper = require('./test_helper');
 var HttpClient = require('../index');
 var statusCodes = require('../lib/wwwdude/util').codes;
@@ -13,9 +14,8 @@ var client = HttpClient.createClient({
     followRedirect: false
   });
 
-function _testStatus(test, verb, statusCode) {
-  test.expect(10);
-
+function _testStatus(beforeExit, verb, statusCode) {
+  var callbacks = 0;
   var echoServer = Helper.echoServer(),
   upCase = verb.replace(/del/, 'delete').toUpperCase();
 
@@ -23,38 +23,35 @@ function _testStatus(test, verb, statusCode) {
       'x-give-me-status-dude': statusCode
     })
   .on(statusCode.toString(), function (data, resp) {
+      callbacks += 1;
       var req = JSON.parse(data);
-      test.ok(data, 'Data must be provided');
-      test.ok(resp, 'Response must be provided');
-      test.strictEqual(req.method, upCase);
-      test.strictEqual(req.url, '/foo');
-      test.strictEqual(req.headers['user-agent'], 'node-wwwdude');
+      assert.ok(data, 'Data must be provided');
+      assert.ok(resp, 'Response must be provided');
+      assert.strictEqual(req.method, upCase);
+      assert.strictEqual(req.url, '/foo');
+      assert.strictEqual(req.headers['user-agent'], 'node-wwwdude');
     })
   .on('error', function (data, resp) {
+      callbacks += 1;
       console.log('caught error');
     })
   .on('complete', function (data, resp) {
+      callbacks += 1;
       var req = JSON.parse(data);
-      test.ok(data, 'Data must be provided');
-      test.ok(resp, 'Response must be provided');
-      test.strictEqual(req.method, upCase);
-      test.strictEqual(req.url, '/foo');
-      test.strictEqual(req.headers['user-agent'], 'node-wwwdude');
-      test.done();
+      assert.ok(data, 'Data must be provided');
+      assert.ok(resp, 'Response must be provided');
+      assert.strictEqual(req.method, upCase);
+      assert.strictEqual(req.url, '/foo');
+      assert.strictEqual(req.headers['user-agent'], 'node-wwwdude');
     });
 
-  setTimeout(function () {
-      test.done();
-    }, 500);
-
+  beforeExit(function () {
+      assert.strictEqual(callbacks, 2, 'Ensure all callbacks are called');
+    });
 }
 
-var tests = {};
-
 Object.keys(statusCodes).forEach(function (code) {
-    tests[code] = function (test) {
-      _testStatus(test, 'get', code);
+    exports['statusCode' + code] = function (beforeExit) {
+      _testStatus(beforeExit, 'get', code);
     };
   });
-
-exports.simpleTests = tests;

@@ -174,9 +174,9 @@ The send() call has been removed. Please don't use it!
 Tests
 -----
 
-To run the unit tests, nodeunit and connect are required. You can install it via npm:
+To run the unit tests, expresso and connect are required. You can install it via npm:
 
-    npm install nodeunit connect
+    npm install expresso connect
 
 There's a Makefile to run the tests:
 

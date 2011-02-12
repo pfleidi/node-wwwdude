@@ -5,36 +5,36 @@
  * @author pfleidi
  */
 
+var assert = require('assert');
 var HttpClient = require('../index');
 
-function _testClientErrs(test, toCompare, url) {
-  test.expect(2);
-
+function _testClientErrs(beforeExit, toCompare, url) {
+  var callbacks =  0;
   var client = HttpClient.createClient();
 
   client.get(url)
-  .on('error', function (msg) {
-      test.ok(msg);
-      test.strictEqual(msg.errno, toCompare);
-      test.done();
+  .on('error', function (err) {
+      callbacks += 1;
+      assert.ok(err);
+      assert.strictEqual(err.message, toCompare);
     })
   .on('complete', function () {
       throw new Error('This should not happen');
     });
 
-  setTimeout(function () {
-      test.done();
-    }, 80000);
+  beforeExit(function () {
+      assert.strictEqual(callbacks, 1, 'Ensure all callbacks are called');
+    });
 }
 
-exports.testNetworkErrors = {
-  connRefused: function (test) {
-    _testClientErrs(test, process.ECONNREFUSED, 'http://localhost:23424');
-  },
-  hostNotReachable: function (test) {
-    _testClientErrs(test, process.ETIMEDOUT, 'http://127.0.0.32:23424');
-  },
-  domainNotFound: function (test) {
-    _testClientErrs(test, require('dns').NOTFOUND, 'http://wrong.tld.foo.bar:23424');
-  }
+exports.networkConnRefused = function (beforeExit) {
+  _testClientErrs(beforeExit, 'ECONNREFUSED, Connection refused', 'http://localhost:23424');
+};
+
+exports.networkHostNotReachable = function (beforeExit) {
+  _testClientErrs(beforeExit, 'ETIMEDOUT, Operation timed out', 'http://127.0.0.32:23424');
+};
+
+exports.networkDomainNotFound = function (beforeExit) {
+  _testClientErrs(beforeExit, 'ENOTFOUND, Domain name not found', 'http://wrong.tld.foo.bar:23424');
 };

@@ -4,6 +4,7 @@
  * @author pfleidi
  */
 
+var assert = require('assert');
 var Helper = require('./test_helper');
 var HttpClient = require('../index');
 
@@ -15,119 +16,121 @@ var client400 = HttpClient.createClient({
     headers: { 'x-give-me-status-dude': 400 } 
   });
 
-function _testServerError(test, verb, payload) {
+function _testServerError(beforeExit, verb, payload) {
+  var callbacks = 0;
   var echoServer = Helper.echoServer();
   var upCase = verb.replace(/del/, 'delete').toUpperCase();
-
-  if (payload) {
-    test.expect(10);
-  } else {
-    test.expect(9);
-  }
 
   client500[verb](echoServer.url + '/foo', payload)
   .on('http-server-error', function (data, response) {
+      callbacks += 1;
       var req = JSON.parse(data);
-      test.ok(data, 'Data must be provided');
-      test.ok(response, 'Response must be provided');
-      test.strictEqual(req.method, upCase);
-      test.strictEqual(req.url, '/foo');
-      test.strictEqual(req.headers['user-agent'], 'node-wwwdude');
+      assert.ok(data, 'Data must be provided');
+      assert.ok(response, 'Response must be provided');
+      assert.strictEqual(req.method, upCase);
+      assert.strictEqual(req.url, '/foo');
+      assert.strictEqual(req.headers['user-agent'], 'node-wwwdude');
       if (payload) {
-        test.strictEqual(req.payload, payload);
+        assert.strictEqual(req.payload, payload);
       }
     })
   .on('internal-server-error', function (data, resp) {
-      test.ok(data, 'Data must be provided');
+      callbacks += 1;
+      assert.ok(data, 'Data must be provided');
     })
   .on('http-server-error', function (data, resp) {
-      test.ok(data, 'Data must be provided');
+      callbacks += 1;
+      assert.ok(data, 'Data must be provided');
     })
   .on('http-error', function (data, resp) {
-      test.ok(data, 'Data must be provided');
+      callbacks += 1;
+      assert.ok(data, 'Data must be provided');
     })
   .on('5XX', function (data, resp) {
-      test.ok(data, 'Data must be provided');
+      callbacks += 1;
+      assert.ok(data, 'Data must be provided');
     })
   .on('complete', function (data, resp) {
-      test.done();
+      callbacks += 1;
     });
 
-  setTimeout(function () {
-      test.done();
-    }, 500);
+  beforeExit(function () {
+      assert.strictEqual(callbacks, 6, 'Ensure all callbacks are called');
+    });
 }
 
-function _testClientError(test, verb, payload) {
+function _testClientError(beforeExit, verb, payload) {
+  var callbacks = 0;
   var echoServer = Helper.echoServer();
   var upCase = verb.replace(/del/, 'delete').toUpperCase();
 
-  if (payload) {
-    test.expect(10);
-  } else {
-    test.expect(9);
-  }
-
   client400[verb](echoServer.url + '/foo', payload)
   .on('http-client-error', function (data, response) {
+      callbacks += 1;
       var req = JSON.parse(data);
-      test.ok(data, 'Data must be provided');
-      test.ok(response, 'Response must be provided');
-      test.strictEqual(req.method, upCase);
-      test.strictEqual(req.url, '/foo');
-      test.strictEqual(req.headers['user-agent'], 'node-wwwdude');
+      assert.ok(data, 'Data must be provided');
+      assert.ok(response, 'Response must be provided');
+      assert.strictEqual(req.method, upCase);
+      assert.strictEqual(req.url, '/foo');
+      assert.strictEqual(req.headers['user-agent'], 'node-wwwdude');
       if (payload) {
-        test.strictEqual(req.payload, payload);
+        assert.strictEqual(req.payload, payload);
       }
     })
   .on('bad-request', function (data, resp) {
-      test.ok(data, 'Data must be provided');
+      callbacks += 1;
+      assert.ok(data, 'Data must be provided');
     })
   .on('http-client-error', function (data, resp) {
-      test.ok(data, 'Data must be provided');
+      callbacks += 1;
+      assert.ok(data, 'Data must be provided');
     })
   .on('http-error', function (data, resp) {
-      test.ok(data, 'Data must be provided');
+      callbacks += 1;
+      assert.ok(data, 'Data must be provided');
     })
   .on('4XX', function (data, resp) {
-      test.ok(data, 'Data must be provided');
+      callbacks += 1;
+      assert.ok(data, 'Data must be provided');
     })
   .on('complete', function (data, resp) {
-      test.done();
+      callbacks += 1;
     });
 
-  setTimeout(function () {
-      test.done();
-    }, 500);
+  beforeExit(function () {
+      assert.strictEqual(callbacks, 6, 'Ensure all callbacks are called');
+    });
 }
 
 
-exports.testServerErrors = {
-  get: function (test) {
-    _testServerError(test, 'get');
-  },
-  put: function (test) {
-    _testServerError(test, 'put', 'ASADAldfjsl');
-  },
-  post: function (test) {
-    _testServerError(test, 'post', 'HurrDurrDerp!');
-  },
-  del: function (test) {
-    _testServerError(test, 'del');
-  }
+exports.serverErrorGet = function (test) {
+  _testServerError(test, 'get');
 };
 
-exports.testClientErrors = {
-  get: function (test) {
-    _testClientError(test, 'get');
-  },
-  put: function (test) {
-    _testClientError(test, 'put', 'ASADAldfjsl');
-  },
-  post: function (test) {
-    _testClientError(test, 'post', 'HurrDurrDerp!');
-  },
-  del: function (test) {
-    _testClientError(test, 'del');
-  }
+exports.serverErrorPut = function (test) {
+  _testServerError(test, 'put', 'ASADAldfjsl');
+};
+
+exports.serverErrorPost = function (test) {
+  _testServerError(test, 'post', 'HurrDurrDerp!');
+};
+
+exports.serverErrorDel = function (test) {
+  _testServerError(test, 'del');
+};
+
+exports.clientErrorGet = function (test) {
+  _testClientError(test, 'get');
+};
+
+exports.clientErrorPut = function (test) {
+  _testClientError(test, 'put', 'ASADAldfjsl');
+};
+
+exports.clientErrorPost = function (test) {
+  _testClientError(test, 'post', 'HurrDurrDerp!');
+};
+
+exports.clientErrorDel = function (test) {
+  _testClientError(test, 'del');
 };

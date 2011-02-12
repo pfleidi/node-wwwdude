@@ -2,6 +2,7 @@
  * test suite for util.js
  */
 
+var assert = require('assert');
 var Util = require('../lib/wwwdude/util');
 
 var a = {
@@ -34,16 +35,12 @@ var expected2 = {
   'Dd-Dd': 'DD'
 };
 
-exports.merge = function (test) {
-  test.expect(2);
-
+exports.merge = function () {
   var merged = Util.mergeHeaders(a, b);
-  test.deepEqual(merged, expected);
+  assert.deepEqual(merged, expected);
 
   var merged2 = Util.mergeHeaders(merged, c);
-  test.deepEqual(merged2, expected2);
-
-  test.done();
+  assert.deepEqual(merged2, expected2);
 };
 
 var exUrl1 = {
@@ -74,16 +71,13 @@ var exUrl3 = {
 };
 
 
-exports.parseUrl = function (test) {
-
+exports.parseUrl = function () {
   var parsed1 = Util.parseUrl('http://foo.bar.baz/hellotest.aa?foo=bar&23=42#asdf');
-  test.deepEqual(exUrl1, parsed1);
+  assert.deepEqual(exUrl1, parsed1);
 
   var parsed2 = Util.parseUrl('http://foo.bar.baz:2342/lala');
-  test.deepEqual(exUrl2, parsed2);
+  assert.deepEqual(exUrl2, parsed2);
 
   var parsed3 = Util.parseUrl('https://foo.bar.baz/asdf');
-  test.deepEqual(exUrl3, parsed3);
-
-  test.done();
+  assert.deepEqual(exUrl3, parsed3);
 };

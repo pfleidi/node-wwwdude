@@ -1,45 +1,47 @@
 /*!
- * unit tests to ensure delivery of payload within
+ * unit asserts to ensure delivery of payload within
  * HTTP POST/PUT requests works
  *
  * @author pfleidi
  */
 
+
+var assert = require('assert');
 var Helper = require('./test_helper');
 var HttpClient = require('../index');
 var client = HttpClient.createClient();
 
-function _testWithPayload(test, verb, payload) {
-  test.expect(7);
-
+function _assertWithPayload(beforeExit, verb, payload) {
+  var callbacks = 0;
   var echoServer = Helper.echoServer();
   var upCase = verb.toUpperCase();
 
   client[verb](echoServer.url + '/foo', payload)
   .on('success', function (data, resp) {
+      callbacks += 1;
       var req = JSON.parse(data);
-      test.ok(data, 'Data must be provided');
-      test.ok(resp, 'Response must be provided');
-      test.strictEqual(req.method, upCase);
-      test.strictEqual(req.url, '/foo');
-      test.strictEqual(req.headers['user-agent'], 'node-wwwdude');
-      test.equal(req.headers['content-length'], payload.length);
-      test.strictEqual(req.payload, payload);
+      assert.ok(data, 'Data must be provided');
+      assert.ok(resp, 'Response must be provided');
+      assert.strictEqual(req.method, upCase);
+      assert.strictEqual(req.url, '/foo');
+      assert.strictEqual(req.headers['user-agent'], 'node-wwwdude');
+      assert.equal(req.headers['content-length'], payload.length);
+      assert.strictEqual(req.payload, payload);
     })
   .on('complete', function (data, resp) {
-      test.done();
+      callbacks += 1;
     });
 
-  setTimeout(function () {
-      test.done();
-    }, 1000);
+  beforeExit(function () {
+      assert.strictEqual(callbacks, 2, 'Ensure all callbacks are called');
+    });
+
 }
 
-exports.testDelivery = {
-  put: function (test) {
-    _testWithPayload(test, 'put', 'ASAldfjsl');
-  },
-  post: function (test) {
-    _testWithPayload(test, 'post', '2342HurrDurrDerp!');
-  }
+exports.assertPayloadPut = function (beforeExit) {
+  _assertWithPayload(beforeExit, 'put', 'ASAldfjsl');
+};
+
+exports.assertPayloadPost = function (beforeExit) {
+  _assertWithPayload(beforeExit, 'post', '2342HurrDurrDerp!');
 };

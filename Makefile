@@ -1,5 +1,5 @@
 test:
-	@find test/wwwdude-*.js | xargs -n 1 -t nodeunit
+	@find test/wwwdude-*.js | xargs -n 1 -t expresso
 
 lint:
 	@find lib/wwwdude/*.js | xargs -n 1 -t nodelint --config nodelintconfig.js
