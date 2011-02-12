@@ -10,6 +10,11 @@ var Helper = require('./test_helper');
 var HttpClient = require('../index');
 var statusCodes = require('../lib/wwwdude/util').codes;
 
+// fix for 0.4.x
+if (process.version.replace(/\d$/, 'x') === 'v0.4.x') {
+  process.setMaxListeners(100);
+}
+
 var client = HttpClient.createClient({
     followRedirect: false
   });

@@ -19,6 +19,7 @@ function _testClientErrs(beforeExit, toCompare, url) {
       assert.strictEqual(err.message, toCompare);
     })
   .on('complete', function () {
+      callbacks += 1;
       throw new Error('This should not happen');
     });
 
@@ -28,13 +29,13 @@ function _testClientErrs(beforeExit, toCompare, url) {
 }
 
 exports.networkConnRefused = function (beforeExit) {
-  _testClientErrs(beforeExit, 'ECONNREFUSED, Connection refused', 'http://localhost:23424');
+  _testClientErrs(beforeExit, 'ECONNREFUSED, Connection refused', 'http://localhost:63424');
 };
 
 exports.networkHostNotReachable = function (beforeExit) {
-  _testClientErrs(beforeExit, 'ETIMEDOUT, Operation timed out', 'http://127.0.0.32:23424');
+  _testClientErrs(beforeExit, 'ETIMEDOUT, Operation timed out', 'http://127.0.22.32:63424');
 };
 
 exports.networkDomainNotFound = function (beforeExit) {
-  _testClientErrs(beforeExit, 'ENOTFOUND, Domain name not found', 'http://wrong.tld.foo.bar:23424');
+  _testClientErrs(beforeExit, 'ENOTFOUND, Domain name not found', 'http://wrong.tld.foo.bar:63424');
 };
