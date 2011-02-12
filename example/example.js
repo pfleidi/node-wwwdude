@@ -8,7 +8,7 @@ var client = HttpClient.createClient();
 // get request with listener for 'complete' event
 client.get('http://example.com/').addListener('complete', function(data, resp) {
     Sys.puts('Finished fetching example.com. Data: ' + data);
-  }).send();
+  });
 
 // More complex example
 
@@ -49,5 +49,5 @@ client.get('http://google.com/')
     // data = transferred content, resp = repsonse object
     Sys.debug('Got data: ' + data);
     Sys.puts('Headers: ' + Sys.inspect(resp.headers));
-  }).send(); // send the request
+  }); // send the request
 
