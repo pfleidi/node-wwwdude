@@ -32,7 +32,7 @@ function _testWithPayload(test, verb, payload) {
 
   setTimeout(function () {
       test.done();
-    }, 500);
+    }, 1000);
 }
 
 exports.testDelivery = {

@@ -46,7 +46,7 @@ function _simple(test, verb, payload, mimetype, gzip) {
 
   setTimeout(function () {
       test.done();
-    }, 500);
+    }, 1000);
 
 }
 
