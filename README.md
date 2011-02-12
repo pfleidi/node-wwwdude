@@ -15,6 +15,7 @@ Supported HTTP verbs
 Features
 --------
 
+* Support for Node 0.2.x AND 0.4.x
 * Very customizable (custom headers on client/request basis ...)
 * Automatic redirect following
 * Automatic gzip decode support 
@@ -54,7 +55,7 @@ A working example:
       .addListener('success', function (data, resp) {
           sys.debug('Got data: ' + data);
           sys.puts('Headers: ' + sys.inspect(resp.headers));
-        }).send();
+        });
 
 API
 ---
@@ -164,11 +165,11 @@ There is also a shorter alternative method called on():
 
     request.on(event, function (data, response) { doSomeThing(); });
 
-Tha passed callback function takes two parameters: data and response. Data contains the content returned from the server. Request is a instance of node's [http.ClientResponse](http://nodejs.org/api.html#http-clientresponse-200).
+The passed callback function takes two parameters: data and response. Data contains the content returned from the server.
 
 ### request.send()
 
-The send() call actually sends the request. The handlers are called when the request returns.
+The send() call has been removed. Please don't use it!
 
 Tests
 -----
@@ -186,8 +187,10 @@ TODO:
 
 * More configurable redirect following (set max. redirect count)
 * Pluggable support for transparent content en/decoders
+* https detection
+* setting custom timeout values
 
 License
 -------
 
-wwwdude is licensed unter the MIT license.
+wwwdude is licensed under the MIT license.
