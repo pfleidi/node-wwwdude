@@ -2,7 +2,7 @@ test:
 	@find test/wwwdude-*.js | xargs -n 1 -t nodeunit
 
 lint:
-	@find lib/*.js | xargs -n 1 -t nodelint --config nodelintconfig.js
+	@find lib/wwwdude/*.js | xargs -n 1 -t nodelint --config nodelintconfig.js
 
 doc:
 	dox --title 'wwwdude' \
