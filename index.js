@@ -1,5 +1,5 @@
 /*!
- * httpDude
+ * wwwdude
  *
  * Copyright(c) 2011 Sven Pfleiderer.
  * MIT Licensed

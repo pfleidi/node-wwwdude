@@ -1,8 +1,8 @@
 /*!
- * test suite for meta.js
+ * test suite for util.js
  */
 
-var Meta = require('../lib/meta');
+var Util = require('../lib/wwwdude/util');
 
 var a = {
   a: 1,
@@ -37,11 +37,16 @@ var expected2 = {
 exports.merge = function (test) {
   test.expect(2);
 
-  var merged = Meta.mergeAttributes(a, b);
+  var merged = Util.mergeAttributes(a, b);
   test.deepEqual(merged, expected);
  
-  var merged2 = Meta.mergeAttributes(merged, c);
+  var merged2 = Util.mergeAttributes(merged, c);
   test.deepEqual(merged2, expected2);
 
   test.done();
+};
+
+
+// TODO: implement test
+exports.parseUrl = function (test) {
 };

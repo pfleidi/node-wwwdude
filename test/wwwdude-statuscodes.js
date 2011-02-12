@@ -7,7 +7,7 @@
 
 var Helper = require('./test_helper');
 var HttpClient = require('../index');
-var statusCodes = require('../lib/httpcodes').codes;
+var statusCodes = require('../lib/wwwdude/util').codes;
 
 var client = HttpClient.createClient({
     followRedirect: false
