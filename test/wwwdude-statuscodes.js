@@ -12,7 +12,7 @@ var statusCodes = require('../lib/wwwdude/util').codes;
 
 // fix for 0.4.x
 if (process.version.replace(/\d$/, 'x') === 'v0.4.x') {
-  process.setMaxListeners(100);
+  process.setMaxListeners(40);
 }
 
 var client = HttpClient.createClient({
@@ -21,17 +21,17 @@ var client = HttpClient.createClient({
 
 function _testStatus(beforeExit, verb, statusCode) {
   var callbacks = 0;
-  var echoServer = Helper.echoServer(),
-  upCase = verb.replace(/del/, 'delete').toUpperCase();
+  var echoServer = Helper.echoServer();
+  var upCase = verb.replace(/del/, 'delete').toUpperCase();
 
   client[verb](echoServer.url + '/foo', {
       'x-give-me-status-dude': statusCode
     })
   .on(statusCode.toString(), function (data, resp) {
       callbacks += 1;
-      var req = JSON.parse(data);
       assert.ok(data, 'Data must be provided');
       assert.ok(resp, 'Response must be provided');
+      var req = JSON.parse(data);
       assert.strictEqual(req.method, upCase);
       assert.strictEqual(req.url, '/foo');
       assert.strictEqual(req.headers['user-agent'], 'node-wwwdude');
@@ -42,12 +42,6 @@ function _testStatus(beforeExit, verb, statusCode) {
     })
   .on('complete', function (data, resp) {
       callbacks += 1;
-      var req = JSON.parse(data);
-      assert.ok(data, 'Data must be provided');
-      assert.ok(resp, 'Response must be provided');
-      assert.strictEqual(req.method, upCase);
-      assert.strictEqual(req.url, '/foo');
-      assert.strictEqual(req.headers['user-agent'], 'node-wwwdude');
     });
 
   beforeExit(function () {
