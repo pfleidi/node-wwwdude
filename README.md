@@ -116,8 +116,6 @@ Every request call returns a Request object that emits events. You can add liste
 
 #### Human readable response codes
 
-* _100_ 'continue'
-* _101_ 'switching-protocols'
 * _200_ 'ok'
 * _201_ 'created'
 * _202_ 'accepted'
