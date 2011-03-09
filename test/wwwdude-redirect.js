@@ -6,19 +6,26 @@
 
 var assert = require('assert');
 var Helper = require('./test_helper');
-var HttpClient = require('../index');
+var HttpClient = require('../');
+
+// fix for 0.4.x
+if (process.version.replace(/\d$/, 'x') === 'v0.4.x') {
+  process.setMaxListeners(38);
+}
 
 var client = HttpClient.createClient({
     followRedirect: true
   });
 
-function _redirect(beforeExit, verb) {
+function _redirect(beforeExit, verb, code) {
   var callbacks = 0;
-  var server = Helper.redirectServer(),
-  upCase = verb.replace(/del/, 'delete').toUpperCase();
+  var upCase = verb.replace(/del/, 'delete').toUpperCase();
+  var server = Helper.redirectServer(code);
+  
+  codeStr = code.toString();
 
   client[verb](server.url)
-  .on('301', function (data, resp) {
+  .on(codeStr, function (data, resp) {
       callbacks += 1;
       assert.ok(data);
       assert.ok(resp);
@@ -28,7 +35,7 @@ function _redirect(beforeExit, verb) {
       var response = JSON.parse(data);
       assert.ok(data, 'Data must be provided');
       assert.ok(resp);
-      assert.strictEqual(resp.statusCode, 301);
+      assert.strictEqual(resp.statusCode, code);
       assert.strictEqual(response.method, upCase);
       assert.strictEqual(response.url, '/');
       assert.strictEqual(response.headers['user-agent'], 'node-wwwdude');
@@ -46,11 +53,13 @@ function _redirect(beforeExit, verb) {
     })
   .on('success', function (data, resp) {
       callbacks += 1;
+      var method = (code === 303) ? 'GET' : upCase;
       var response = JSON.parse(data);
+
       assert.ok(data, 'Data must be provided');
       assert.ok(resp);
       assert.strictEqual(resp.statusCode, 200);
-      assert.strictEqual(response.method, upCase);
+      assert.strictEqual(response.method, method);
       assert.strictEqual(response.url, '/redirected');
       assert.strictEqual(response.headers['user-agent'], 'node-wwwdude');
       assert.strictEqual(response.msg, 'Been there, done that!');
@@ -61,22 +70,13 @@ function _redirect(beforeExit, verb) {
     });
 }
 
-exports.redirectGet = function (beforeExit) {
-  _redirect(beforeExit, 'get');
-};
-
-exports.redirectPut = function (beforeExit) {
-  _redirect(beforeExit, 'put');
-};
-
-exports.redirectPost = function (beforeExit) {
-  _redirect(beforeExit, 'post');
-};
-
-exports.redirectDel = function (beforeExit) {
-  _redirect(beforeExit, 'del');
-};
-
+[301, 302, 303].forEach(function (statusCode) {
+    ['get', 'put', 'post', 'del'].forEach(function (method) {
+        exports['redirect' + method + statusCode] = function (beforeExit) {
+          _redirect(beforeExit, method, statusCode);
+        };
+      });
+  });
 
 var client2 = HttpClient.createClient({ 
     followRedirect: false,

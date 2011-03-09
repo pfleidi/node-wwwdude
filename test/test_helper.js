@@ -1,4 +1,5 @@
 var Connect = require('connect');
+var Gzip = require('./gzip-proc');
 
 exports.port = 23420;
 
@@ -43,8 +44,8 @@ exports.echoServer = function () {
   }
 
   var server = Connect.createServer(
-    Connect.gzip(),
-    Connect.bodyDecoder(),
+    Connect.bodyParser(),
+    Gzip(),
     Connect.router(function (app) {
         _routeall(app, /foo(.*)/, handler);
       })
@@ -58,8 +59,9 @@ exports.echoServer = function () {
   };
 };
 
-exports.redirectServer = function () {
+exports.redirectServer = function (code) {
   var port = exports.port;
+  code = code || 301;
   exports.port += 1;
 
   function redirected(request, response, next) {
@@ -73,7 +75,7 @@ exports.redirectServer = function () {
 
   function redirect(request, response, next) {
     var content = _getRequestJSON(request);
-    response.writeHead(301, {
+    response.writeHead(code, {
         'Content-Type': 'application/json',
         'Location': 'http://localhost:' + port + '/redirected'
       });
@@ -87,8 +89,8 @@ exports.redirectServer = function () {
   }
 
   var server = Connect.createServer(
-    Connect.gzip(),
-    Connect.bodyDecoder(),
+    Connect.bodyParser(),
+    Gzip(),
     Connect.router(function (app) {
         _routeall(app, '/', redirect);
         _routeall(app, '/redirected', redirected);

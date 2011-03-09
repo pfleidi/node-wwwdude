@@ -7,12 +7,12 @@
 
 var assert = require('assert');
 var Helper = require('./test_helper');
-var HttpClient = require('../index');
+var HttpClient = require('../');
 var statusCodes = require('../lib/wwwdude/util').codes;
 
 // fix for 0.4.x
 if (process.version.replace(/\d$/, 'x') === 'v0.4.x') {
-  process.setMaxListeners(40);
+  process.setMaxListeners(38);
 }
 
 var client = HttpClient.createClient({
@@ -49,8 +49,8 @@ function _testStatus(beforeExit, verb, statusCode) {
     });
 }
 
-Object.keys(statusCodes).forEach(function (code) {
-    exports['statusCode' + code] = function (beforeExit) {
-      _testStatus(beforeExit, 'get', code);
+Object.keys(statusCodes).forEach(function (statusCode) {
+    exports['statusCode' + statusCode] = function (beforeExit) {
+      _testStatus(beforeExit, 'get', statusCode);
     };
   });
