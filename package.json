@@ -1,7 +1,7 @@
 { "name" : "wwwdude",
   "description" : "Simple to use HTTP library on top of the built in libs of node.js",
   "tags" : ["http", "simple", "util", "rest", "utility"],
-  "version" : "0.0.5",
+  "version" : "0.0.6",
   "author" : "Sven Pfleiderer <sven@roothausen.de>",
   "directories" : { "lib" : "lib" },
   "repository" : { 
