@@ -19,6 +19,7 @@ Features
 * Very customizable (custom headers on client/request basis ...)
 * Automatic redirect following
 * Automatic gzip decode support 
+* Automatic support for HTTPS (node 0.4.x only)
 * Flexible handling of responses with event emitters
 
 Installation

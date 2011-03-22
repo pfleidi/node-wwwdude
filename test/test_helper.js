@@ -19,8 +19,11 @@ function _routeall(app, path, handler) {
     });
 }
 
-exports.echoServer = function () {
+exports.echoServer = function (options) {
   var port = exports.port;
+  var protocol = options ? 'https' : 'http';
+  var server;
+
   exports.port += 1;
 
   function handler(request, response, next) {
@@ -43,18 +46,28 @@ exports.echoServer = function () {
     server.close();
   }
 
-  var server = Connect.createServer(
-    Connect.bodyParser(),
-    Gzip(),
-    Connect.router(function (app) {
-        _routeall(app, /foo(.*)/, handler);
-      })
-  );
+  if (options) {
+    server = Connect.createServer(
+      options,
+      Connect.bodyParser(),
+      Connect.router(function (app) {
+          _routeall(app, /foo(.*)/, handler);
+        })
+    );
+  } else {
+    server = Connect.createServer(
+      Connect.bodyParser(),
+      Gzip(),
+      Connect.router(function (app) {
+          _routeall(app, /foo(.*)/, handler);
+        })
+    );
+  }
 
   server.listen(port, 'localhost');
 
   return {
-    url: 'http://localhost:' + port,
+    url: protocol + '://localhost:' + port,
     serv: server
   };
 };

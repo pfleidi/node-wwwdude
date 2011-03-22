@@ -49,6 +49,7 @@ var exUrl1 = {
   hash: '#asdf',
   host: 'foo.bar.baz',
   hostname: 'foo.bar.baz',
+  protocol: 'http:',
   path: '/hellotest.aa?foo=bar&23=42#asdf'
 };
 
@@ -58,6 +59,7 @@ var exUrl2 = {
   hash: '',
   host: 'foo.bar.baz:2342',
   hostname: 'foo.bar.baz',
+  protocol: 'http:',
   path: '/lala'
 };
 
@@ -67,6 +69,7 @@ var exUrl3 = {
   hash: '',
   host: 'foo.bar.baz',
   hostname: 'foo.bar.baz',
+  protocol: 'https:',
   path: '/asdf'
 };
 
