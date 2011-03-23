@@ -173,9 +173,9 @@ The send() call has been removed. Please don't use it!
 Tests
 -----
 
-To run the unit tests, expresso and connect are required. You can install it via npm:
+To run the unit tests, expresso, semver and connect are required. You can install it via npm:
 
-    npm install expresso connect
+    npm install expresso connect semver
 
 There's a Makefile to run the tests:
 

@@ -5,11 +5,12 @@
  */
 
 var assert = require('assert');
+var Semver = require('semver');
 var Helper = require('./test_helper');
 var HttpClient = require('../');
 
-// fix for 0.4.x
-if (process.version.replace(/\d$/, 'x') === 'v0.4.x') {
+// fix for node >= 0.4.x
+if (Semver.gt(process.version, '0.4.0')) {
   process.setMaxListeners(38);
 }
 
@@ -21,7 +22,7 @@ function _redirect(beforeExit, verb, code) {
   var callbacks = 0;
   var upCase = verb.replace(/del/, 'delete').toUpperCase();
   var server = Helper.redirectServer(code);
-  
+
   codeStr = code.toString();
 
   client[verb](server.url)
