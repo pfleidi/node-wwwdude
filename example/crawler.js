@@ -39,14 +39,20 @@ function crawl(url) {
       console.log('Response: ' + data);
     })
   .on('success', function (data, resp) {
-      processContent(data);
+      processContent(url, data);
     }); 
 }
 
-function processContent(content) {
+function processContent(lastUrl, content) {
   getMatches(content).forEach(function (url) {
-      crawl(Url.resolve(entryUrl, url));
+      crawl(Url.resolve(lastUrl, url));
     });
 }
+
+// catch uncaught exceptions
+process.on('uncaughtException', function (err) {
+    console.log('RUNTIME ERROR! :' + err.stack);
+  });
+
 
 crawl(entryUrl);
