@@ -6,8 +6,7 @@
  * @author pfleidi
  */
 
-var Sys = require('sys');
-var HttpClient = require('wwwdude');
+var HttpClient = require('../');
 var Url = require('url');
 
 var client = HttpClient.createClient();
@@ -29,15 +28,15 @@ function getMatches(content) {
 }
 
 function crawl(url) {
-  Sys.puts('Crawling: ' + url);
+  console.log('Crawling: ' + url);
 
   client.get(url)
   .on('error', function (err) {
-      Sys.puts('Error: ' + Sys.inspect(err));
+      console.log('Error: ' + err);
     })
   .on('http-error', function (data, resp) {
-      Sys.puts('HTTP Status Code > 400');
-      Sys.puts('Headers: ' + Sys.inspect(resp.headers));
+      console.log('HTTP Status Code > 400');
+      console.log('Response: ' + data);
     })
   .on('success', function (data, resp) {
       processContent(data);
