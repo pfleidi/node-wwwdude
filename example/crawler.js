@@ -8,39 +8,53 @@
 
 var HttpClient = require('../');
 var Url = require('url');
+var Crypto = require('crypto');
 
 var client = HttpClient.createClient();
 var regex = /<a href=["'](\S*)["'].*>/g;
+
+var crawled = [];
+var failed = [];
 
 var entryUrl = process.argv[2];
 var urlMatch = new RegExp(process.argv[3]);
 
 function getMatches(content) {
-  var matches = []; 
+  var matches = [];
   var match;
 
   while (match = regex.exec(content)) {
     if (match && urlMatch.test(match)) {
-      matches.push(match[1]);
-    }   
+      // we need the url only once
+      if (matches.indexOf(match) === -1) {
+        matches.push(match[1]);
+      }
+    }
   }
   return matches;
 }
 
 function crawl(url) {
-  console.log('Crawling: ' + url);
+  var hash = Crypto.createHash('sha1').update(url).digest("hex");
 
-  client.get(url)
-  .on('error', function (err) {
-      console.log('Error: ' + err);
-    })
-  .on('http-error', function (data, resp) {
-      console.log('HTTP Status Code > 400');
-      console.log('Response: ' + data);
-    })
-  .on('success', function (data, resp) {
-      processContent(url, data);
-    }); 
+  if (crawled.indexOf(hash) === -1 && failed.indexOf(hash) === -1) {
+    console.log('Crawling: ' + url);
+
+    client.get(url)
+    .on('error', function (err) {
+        console.log('Error: ' + err);
+        failed.push(hash);
+      })
+    .on('http-error', function (data, resp) {
+        console.log('HTTP Status Code > 400 for: ' + url);
+      })
+    .on('success', function (data, resp) {
+        processContent(url, data);
+      })
+    .on('complete', function () {
+        crawled.push(hash);
+      });
+  }
 }
 
 function processContent(lastUrl, content) {
