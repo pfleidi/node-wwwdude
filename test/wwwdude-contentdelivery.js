@@ -9,7 +9,10 @@
 var assert = require('assert');
 var Helper = require('./test_helper');
 var HttpClient = require('../index');
-var client = HttpClient.createClient();
+
+var client = HttpClient.createClient({
+    parseContent: JSON.parse
+  });
 
 function _assertWithPayload(beforeExit, verb, payload) {
   var callbacks = 0;
@@ -19,14 +22,13 @@ function _assertWithPayload(beforeExit, verb, payload) {
   client[verb](echoServer.url + '/foo', payload)
   .on('success', function (data, resp) {
       callbacks += 1;
-      var req = JSON.parse(data);
       assert.ok(data, 'Data must be provided');
       assert.ok(resp, 'Response must be provided');
-      assert.strictEqual(req.method, upCase);
-      assert.strictEqual(req.url, '/foo');
-      assert.strictEqual(req.headers['user-agent'], 'node-wwwdude');
-      assert.equal(req.headers['content-length'], payload.length);
-      assert.strictEqual(req.payload, payload);
+      assert.strictEqual(data.method, upCase);
+      assert.strictEqual(data.url, '/foo');
+      assert.strictEqual(data.headers['user-agent'], 'node-wwwdude');
+      assert.equal(data.headers['content-length'], payload.length);
+      assert.strictEqual(data.payload, payload);
     })
   .on('complete', function (data, resp) {
       callbacks += 1;
