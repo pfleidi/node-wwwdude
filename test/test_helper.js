@@ -14,7 +14,7 @@ function _getRequestJSON(request) {
 }
 
 function _routeall(app, path, handler) {
-  ['get', 'put', 'post', 'del', 'head'].forEach(function (verb) {
+  ['get', 'put', 'post', 'del'].forEach(function (verb) {
       app[verb](path, handler);
     });
 }
