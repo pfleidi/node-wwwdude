@@ -74,25 +74,30 @@ Creates a new client object with predefined options for each request made with t
 
 The createClient call returns a Request object. On this object you can call a method for each supported HTTP verb.
 
-### client.get(url[, customHeaders])
+### client.get(url[, requestOptions])
 
 Creates a HTTP GET request
 
-### client.put(url, payload[, customHeaders])
+### client.put(url [, requestOptions])
 
 Creates a HTTP PUT request
 
-### client.post(url, payload[, customHeaders])
+### client.post(url, [, requestOptions])
 
 Creates a HTTP POST request
 
-### client.delete(url[, customHeaders)]
+### client.delete(url[, requestOptions])
 
 Creates a HTTP DELETE request
 
-### client.head(url[, customHeaders)]
+### client.head(url[, requestOptions)]
 
 Creates a HTTP HEAD request
+
+### requestOptions hash
+
+* _headers_ see customHeaders
+* _payload_ content to transmit with PUT or POST request
 
 ### customHeaders hash
 
