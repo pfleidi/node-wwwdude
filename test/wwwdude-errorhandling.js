@@ -21,7 +21,7 @@ function _testServerError(beforeExit, verb, payload) {
   var echoServer = Helper.echoServer();
   var upCase = verb.replace(/del/, 'delete').toUpperCase();
 
-  client500[verb](echoServer.url + '/foo', payload)
+  client500[verb](echoServer.url + '/foo', { payload: payload })
   .on('http-server-error', function (data, response) {
       callbacks += 1;
       var req = JSON.parse(data);
@@ -64,7 +64,7 @@ function _testClientError(beforeExit, verb, payload) {
   var echoServer = Helper.echoServer();
   var upCase = verb.replace(/del/, 'delete').toUpperCase();
 
-  client400[verb](echoServer.url + '/foo', payload)
+  client400[verb](echoServer.url + '/foo', { payload: payload })
   .on('http-client-error', function (data, response) {
       callbacks += 1;
       var req = JSON.parse(data);
@@ -133,4 +133,26 @@ exports.clientErrorPost = function (test) {
 
 exports.clientErrorDel = function (test) {
   _testClientError(test, 'del');
+};
+
+exports.parseError = function (beforeExit) {
+  var callbacks = 0;
+  var client = HttpClient.createClient({
+      contentParser: function (content, callback) {
+        callback(new Error('test'));
+      }
+    });
+  var echoServer = Helper.echoServer();
+  client.get(echoServer.url + '/foo')
+  .on('error', function () {
+      callbacks += 1;
+    })
+  .on('complete', function () {
+      throw new Error('this should not happen!');
+    });
+
+  beforeExit(function () {
+      assert.strictEqual(callbacks, 1, 'Ensure only error is called');
+    });
+
 };

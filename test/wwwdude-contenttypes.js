@@ -7,48 +7,40 @@
 
 var assert = require('assert');
 var Helper = require('./test_helper');
+var ClientHelper = require('./client_helper');
 var HttpClient = require('../index');
-var client1 = HttpClient.createClient();
-var client2 = HttpClient.createClient({ gzip: true });
+var client1 = HttpClient.createClient({ contentParser: HttpClient.parsers.json });
+var client2 = HttpClient.createClient({
+    contentParser: HttpClient.parsers.json,
+    gzip: true
+  });
 
 function _simple(beforeExit, verb, payload, mimetype, gzip) {
-  var callbacks = 0;
-  var echoServer = Helper.echoServer();
-  var upCase = verb.toUpperCase();
   var client = gzip ? client2 : client1;
 
-  client[verb](echoServer.url + '/foo', payload, {
-      'Content-Type': mimetype
-    })
-  .on('2XX', function (data, resp) {
-      callbacks += 1;
-      var req = JSON.parse(data);
-      assert.ok(data, 'Data must be provided');
-      assert.ok(resp, 'Response must be provided');
-      assert.strictEqual(req.method, upCase);
-      assert.strictEqual(req.payload, payload);
-      assert.strictEqual(req.headers['content-type'], mimetype || 'application/x-www-form-urlencoded');
-      assert.strictEqual(req.url, '/foo');
-      assert.strictEqual(req.headers['user-agent'], 'node-wwwdude');
-      if (gzip) {
-        assert.strictEqual(req.headers['accept-encoding'], 'gzip');
-        assert.strictEqual(resp.headers['content-encoding'], 'gzip');
-      } else {
-        assert.strictEqual(req.headers['accept-encoding'], undefined);
-        assert.strictEqual(resp.headers['content-encoding'], undefined);
-      }
-    })
-  .on('success', function (data, resp) {
-      callbacks += 1;
-      var req = JSON.parse(data);
-      assert.ok(data, 'Data must be provided');
-    })
-  .on('complete', function (data, resp) {
-      callbacks += 1;
-    });
+  ClientHelper.simpleRequest({
+      client: client,
+      beforeExit: beforeExit,
+      verb: verb,
+      path: '/foo',
+      reqopts: { 
+        headers: { 'Content-Type': mimetype },
+        payload: payload
+      },
+      callback2XX: function (data, resp) {
+        assert.strictEqual(data.headers['user-agent'], 'node-wwwdude');
+        assert.strictEqual(data.payload, payload);
+        assert.strictEqual(data.headers['content-type'], mimetype || 'application/x-www-form-urlencoded');
+        assert.strictEqual(data.headers['user-agent'], 'node-wwwdude');
+        if (gzip) {
+          assert.strictEqual(data.headers['accept-encoding'], 'gzip');
+          assert.strictEqual(resp.headers['content-encoding'], 'gzip');
+        } else {
+          assert.strictEqual(data.headers['accept-encoding'], undefined);
+          assert.strictEqual(resp.headers['content-encoding'], undefined);
+        }
 
-  beforeExit(function () {
-      assert.strictEqual(callbacks, 3, 'Ensure all callbacks are called');
+      }
     });
 }
 

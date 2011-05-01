@@ -25,9 +25,9 @@ function _testStatus(beforeExit, verb, statusCode) {
   var echoServer = Helper.echoServer();
   var upCase = verb.replace(/del/, 'delete').toUpperCase();
 
-  client[verb](echoServer.url + '/foo', {
-      'x-give-me-status-dude': statusCode
-    })
+  client[verb](echoServer.url + '/foo', { headers: {
+        'x-give-me-status-dude': statusCode
+      }})
   .on(statusCode.toString(), function (data, resp) {
       callbacks += 1;
       assert.ok(data, 'Data must be provided');

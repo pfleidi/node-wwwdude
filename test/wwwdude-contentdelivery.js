@@ -10,16 +10,14 @@ var assert = require('assert');
 var Helper = require('./test_helper');
 var HttpClient = require('../index');
 
-var client = HttpClient.createClient({
-    parseContent: JSON.parse
-  });
+var client = HttpClient.createClient({ contentParser: HttpClient.parsers.json});
 
 function _assertWithPayload(beforeExit, verb, payload) {
   var callbacks = 0;
   var echoServer = Helper.echoServer();
   var upCase = verb.toUpperCase();
 
-  client[verb](echoServer.url + '/foo', payload)
+  client[verb](echoServer.url + '/foo', { payload: payload })
   .on('success', function (data, resp) {
       callbacks += 1;
       assert.ok(data, 'Data must be provided');
