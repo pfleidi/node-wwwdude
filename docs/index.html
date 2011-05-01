@@ -108,7 +108,309 @@ code .this { color: #19469D; }</style>
 		</script>
 	</head>
 	<body>
-<table id="source"><tbody><tr><td><h1>wwwdude</h1><p>wwwdude is a small and flexible http client library on top of node\'s http client</p></td><td></td></tr><tr class="filename"><td><h2 id="lib//httpcodes.js"><a href="#">httpcodes</a></h2></td><td>lib//httpcodes.js</td></tr><tr class="code">
+<table id="source"><tbody><tr><td><h1>wwwdude</h1><p>wwwdude is a small and flexible http client library on top of node\'s http client</p></td><td></td></tr><tr class="filename"><td><h2 id="lib//wwwdude/index.js"><a href="#">index</a></h2></td><td>lib//wwwdude/index.js</td></tr><tr class="code">
+<td class="docs">
+<p> Module dependencies </p>
+</td>
+<td class="code">
+<pre><code><span class="keyword">var</span> <span class="class">Url</span> = <span class="variable">require</span>(<span class="string">'url'</span>);
+<span class="keyword">var</span> <span class="class">EventEmitter</span> = <span class="variable">require</span>(<span class="string">'events'</span>).<span class="class">EventEmitter</span>;
+<span class="keyword">var</span> <span class="class">Child_process</span> = <span class="variable">require</span>(<span class="string">'child_process'</span>);
+
+<span class="keyword">var</span> <span class="class">Util</span> = <span class="variable">require</span>(<span class="string">'./util'</span>);
+<span class="keyword">var</span> <span class="variable">statusCodes</span> = <span class="class">Util</span>.<span class="variable">codes</span>;
+<span class="keyword">var</span> <span class="variable">nodeVersion</span> = <span class="variable">process</span>.<span class="variable">version</span>.<span class="variable">slice</span>(<span class="number integer">0</span>, <span class="number integer">6</span>).<span class="variable">replace</span>(<span class="regexp">/\d$/</span>, <span class="string">'x'</span>);
+<span class="keyword">var</span> <span class="class">NodeWrapper</span> = <span class="variable">require</span>(<span class="string">'./node-versions/'</span> + <span class="variable">nodeVersion</span>);
+
+<span class="keyword">var</span> <span class="variable">defaultHeaders</span> = {
+  <span class="string">'User-Agent'</span>: <span class="string">'node-wwwdude'</span>
+};
+
+<span class="variable">exports</span>.<span class="variable">version</span> = <span class="string">'0.0.7'</span>;
+<span class="variable">exports</span>.<span class="variable">parsers</span> = <span class="variable">require</span>(<span class="string">'./parsers'</span>);</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Factory method to create a client</p>
+
+<h2></h2>
+
+<ul><li><p><strong>return</strong>: <em>Object</em> </p></li><li><p><strong>api</strong>: <em>public</em></p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="keyword">var</span> <span class="variable">createClient</span> = <span class="variable">exports</span>.<span class="variable">createClient</span> = <span class="keyword">function</span> <span class="variable">createClient</span>(<span class="variable">clientOptions</span>) {
+  <span class="variable">clientOptions</span> = <span class="variable">clientOptions</span> || {};
+
+  <span class="keyword">var</span> <span class="variable">encoding</span> = <span class="variable">clientOptions</span>.<span class="variable">encoding</span> || <span class="string">'utf8'</span>;
+  <span class="keyword">var</span> <span class="variable">clientHeaders</span> = <span class="class">Util</span>.<span class="variable">mergeHeaders</span>(<span class="variable">defaultHeaders</span>, <span class="variable">clientOptions</span>.<span class="variable">headers</span>);
+
+  <span class="keyword">if</span> (<span class="variable">clientOptions</span>.<span class="variable">gzip</span>) {
+    <span class="variable">clientHeaders</span>[<span class="string">'Accept-Encoding'</span>] = <span class="string">'gzip'</span>;
+  }</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p> return the actual API </p>
+</td>
+<td class="code">
+<pre><code><span class="keyword">return</span> {</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>HTTP GET request</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  url</p></li><li><p><strong>param</strong>: <em>Object</em>  opts</p></li><li><p><strong>return</strong>: <em>EventEmitter</em> </p></li><li><p><strong>api</strong>: <em>public</em></p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">get</span>: <span class="keyword">function</span> <span class="variable">get</span>(<span class="variable">url</span>, <span class="variable">opts</span>) {
+      <span class="variable">opts</span> = <span class="variable">opts</span> || {};
+      <span class="variable">opts</span>.<span class="variable">headers</span> = <span class="class">Util</span>.<span class="variable">mergeHeaders</span>(<span class="variable">clientHeaders</span>, <span class="variable">opts</span>.<span class="variable">headers</span>);
+      <span class="keyword">return</span> <span class="variable">makeRequest</span>(<span class="string">'GET'</span>, <span class="variable">url</span>, <span class="variable">opts</span>);
+    },</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>HTTP PUT request</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  url</p></li><li><p><strong>param</strong>: <em>Object</em>  opts</p></li><li><p><strong>return</strong>: <em>EventEmitter</em> </p></li><li><p><strong>api</strong>: <em>public</em></p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">put</span>: <span class="keyword">function</span> <span class="variable">put</span>(<span class="variable">url</span>, <span class="variable">opts</span>) {
+      <span class="variable">opts</span> = <span class="variable">opts</span> || {};
+      <span class="variable">opts</span>.<span class="variable">headers</span> = <span class="class">Util</span>.<span class="variable">mergeHeaders</span>(<span class="variable">clientHeaders</span>, <span class="variable">opts</span>.<span class="variable">headers</span>);
+      <span class="keyword">return</span> <span class="variable">makeRequest</span>(<span class="string">'PUT'</span>, <span class="variable">url</span>, <span class="variable">opts</span>);
+    },</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>HTTP POST request</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  url</p></li><li><p><strong>param</strong>: <em>Object</em>  opts</p></li><li><p><strong>return</strong>: <em>EventEmitter</em> </p></li><li><p><strong>api</strong>: <em>public</em></p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">post</span>: <span class="keyword">function</span> <span class="variable">post</span>(<span class="variable">url</span>, <span class="variable">opts</span>) {
+      <span class="variable">opts</span> = <span class="variable">opts</span> || {};
+      <span class="variable">opts</span>.<span class="variable">headers</span> = <span class="class">Util</span>.<span class="variable">mergeHeaders</span>(<span class="variable">clientHeaders</span>, <span class="variable">opts</span>.<span class="variable">headers</span>);
+      <span class="keyword">return</span> <span class="variable">makeRequest</span>(<span class="string">'POST'</span>, <span class="variable">url</span>, <span class="variable">opts</span>);
+    },</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>HTTP DELETE request</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  url</p></li><li><p><strong>param</strong>: <em>Object</em>  opts</p></li><li><p><strong>return</strong>: <em>EventEmitter</em> </p></li><li><p><strong>api</strong>: <em>public</em></p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">del</span>: <span class="keyword">function</span> <span class="variable">del</span>(<span class="variable">url</span>, <span class="variable">opts</span>) {
+      <span class="variable">opts</span> = <span class="variable">opts</span> || {};
+      <span class="variable">opts</span>.<span class="variable">headers</span> = <span class="class">Util</span>.<span class="variable">mergeHeaders</span>(<span class="variable">clientHeaders</span>, <span class="variable">opts</span>.<span class="variable">headers</span>);
+      <span class="keyword">return</span> <span class="variable">makeRequest</span>(<span class="string">'DELETE'</span>, <span class="variable">url</span>, <span class="variable">opts</span>);
+    },</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>HTTP DELETE request</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  url</p></li><li><p><strong>param</strong>: <em>Object</em>  opts</p></li><li><p><strong>return</strong>: <em>Object</em>  client</p></li><li><p><strong>return</strong>: <em>EventEmitter</em> </p></li><li><p><strong>api</strong>: <em>public</em></p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">head</span>: <span class="keyword">function</span> <span class="variable">head</span>(<span class="variable">url</span>, <span class="variable">opts</span>) {
+      <span class="variable">opts</span> = <span class="variable">opts</span> || {};
+      <span class="variable">opts</span>.<span class="variable">headers</span> = <span class="class">Util</span>.<span class="variable">mergeHeaders</span>(<span class="variable">clientHeaders</span>, <span class="variable">opts</span>.<span class="variable">headers</span>);
+      <span class="keyword">return</span> <span class="variable">makeRequest</span>(<span class="string">'HEAD'</span>, <span class="variable">url</span>, <span class="variable">opts</span>);
+    }
+
+  };
+
+};
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="lib//wwwdude/node-versions/v0.2.x.js"><a href="#">v0.2.x</a></h2></td><td>lib//wwwdude/node-versions/v0.2.x.js</td></tr><tr class="code">
+<td class="docs">
+<p> Module dependencies </p>
+</td>
+<td class="code">
+<pre><code><span class="keyword">var</span> <span class="class">Http</span> = <span class="variable">require</span>(<span class="string">'http'</span>);</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Make the actual request for Node v0.2.x</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>Object</em>  context</p></li><li><p><strong>return</strong>: <em>undefined</em> </p></li><li><p><strong>api</strong>: <em>public</em></p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">exports</span>.<span class="variable">request</span> = <span class="keyword">function</span> (<span class="variable">context</span>) {
+  <span class="keyword">var</span> <span class="variable">url</span> = <span class="variable">context</span>.<span class="variable">url</span>;
+  <span class="keyword">var</span> <span class="variable">headers</span> = <span class="variable">context</span>.<span class="variable">options</span>.<span class="variable">headers</span>;
+  <span class="keyword">var</span> <span class="variable">payload</span> = <span class="variable">context</span>.<span class="variable">options</span>.<span class="variable">payload</span>;
+
+  <span class="keyword">var</span> <span class="variable">client</span> = <span class="class">Http</span>.<span class="variable">createClient</span>(<span class="variable">url</span>.<span class="variable">port</span>, <span class="variable">url</span>.<span class="variable">hostname</span>);
+  <span class="keyword">var</span> <span class="variable">request</span>;
+
+  <span class="variable">headers</span>.<span class="variable">host</span> = <span class="variable">url</span>.<span class="variable">host</span>;
+
+  <span class="keyword">if</span> (<span class="variable">payload</span>) {
+    <span class="keyword">if</span> (!<span class="variable">headers</span>[<span class="string">'Content-Type'</span>]) {
+      <span class="variable">headers</span>[<span class="string">'Content-Type'</span>] = <span class="string">'application/x-www-form-urlencoded'</span>;
+    }
+    <span class="variable">headers</span>[<span class="string">'Content-Length'</span>] = <span class="variable">payload</span>.<span class="variable">length</span>;
+    <span class="variable">request</span> = <span class="variable">client</span>.<span class="variable">request</span>(<span class="variable">context</span>.<span class="variable">method</span>, <span class="variable">url</span>.<span class="variable">path</span>, <span class="variable">headers</span>);
+    <span class="variable">request</span>.<span class="variable">write</span>(<span class="variable">payload</span>, <span class="variable">context</span>.<span class="variable">encoding</span>);
+  } <span class="keyword">else</span> {
+    <span class="variable">request</span> = <span class="variable">client</span>.<span class="variable">request</span>(<span class="variable">context</span>.<span class="variable">method</span>, <span class="variable">url</span>.<span class="variable">path</span>, <span class="variable">headers</span>);
+  }
+
+  <span class="variable">client</span>.<span class="variable">on</span>(<span class="string">'error'</span>, <span class="keyword">function</span> (<span class="variable">err</span>) {
+      <span class="variable">context</span>.<span class="variable">respond</span>(<span class="string">'error'</span>, <span class="variable">err</span>);
+    });
+
+  <span class="variable">request</span>.<span class="variable">on</span>(<span class="string">'response'</span>, <span class="variable">context</span>.<span class="variable">handler</span>);
+  <span class="variable">request</span>.<span class="variable">end</span>();
+};
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="lib//wwwdude/node-versions/v0.4.x.js"><a href="#">v0.4.x</a></h2></td><td>lib//wwwdude/node-versions/v0.4.x.js</td></tr><tr class="code">
+<td class="docs">
+<p> Module dependencies </p>
+</td>
+<td class="code">
+<pre><code><span class="keyword">var</span> <span class="class">Http</span> = <span class="variable">require</span>(<span class="string">'http'</span>);
+<span class="keyword">var</span> <span class="class">Https</span> = <span class="variable">require</span>(<span class="string">'https'</span>);</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Make the actual request for Node v0.4.x</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>Object</em>  context</p></li><li><p><strong>return</strong>: <em>undefined</em> </p></li><li><p><strong>api</strong>: <em>public</em></p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">exports</span>.<span class="variable">request</span> = <span class="keyword">function</span> (<span class="variable">context</span>) {
+  <span class="keyword">var</span> <span class="variable">url</span> = <span class="variable">context</span>.<span class="variable">url</span>;
+  <span class="keyword">var</span> <span class="variable">headers</span> = <span class="variable">context</span>.<span class="variable">options</span>.<span class="variable">headers</span>;
+  <span class="keyword">var</span> <span class="variable">payload</span> = <span class="variable">context</span>.<span class="variable">options</span>.<span class="variable">payload</span>;
+  <span class="keyword">var</span> <span class="variable">request</span>;
+
+  <span class="keyword">var</span> <span class="variable">options</span> = {
+    <span class="variable">host</span>: <span class="variable">url</span>.<span class="variable">hostname</span>,
+    <span class="variable">port</span>: <span class="variable">url</span>.<span class="variable">port</span>,
+    <span class="variable">path</span>: <span class="variable">url</span>.<span class="variable">path</span>,
+    <span class="variable">method</span>: <span class="variable">context</span>.<span class="variable">method</span>,
+    <span class="variable">headers</span>: <span class="variable">headers</span>
+  };
+
+  <span class="keyword">if</span> (<span class="variable">payload</span>) {
+    <span class="keyword">if</span> (!<span class="variable">headers</span>[<span class="string">'Content-Type'</span>]) {
+      <span class="variable">headers</span>[<span class="string">'Content-Type'</span>] = <span class="string">'application/x-www-form-urlencoded'</span>;
+    }
+    <span class="variable">headers</span>[<span class="string">'Content-Length'</span>] = <span class="variable">payload</span>.<span class="variable">length</span>;
+  }
+
+  <span class="keyword">if</span> (<span class="variable">url</span>.<span class="variable">protocol</span> === <span class="string">'https:'</span>) {
+    <span class="variable">request</span> = <span class="class">Https</span>.<span class="variable">request</span>(<span class="variable">options</span>, <span class="variable">context</span>.<span class="variable">handler</span>);
+  } <span class="keyword">else</span> {
+    <span class="variable">request</span> = <span class="class">Http</span>.<span class="variable">request</span>(<span class="variable">options</span>, <span class="variable">context</span>.<span class="variable">handler</span>);
+  }
+
+  <span class="variable">request</span>.<span class="variable">on</span>(<span class="string">'error'</span>, <span class="keyword">function</span> (<span class="variable">err</span>) {
+      <span class="variable">context</span>.<span class="variable">respond</span>(<span class="string">'error'</span>, <span class="variable">err</span>);
+    });
+
+  <span class="keyword">if</span> (<span class="variable">payload</span>) {
+    <span class="variable">request</span>.<span class="variable">write</span>(<span class="variable">payload</span>);
+  }
+
+  <span class="variable">request</span>.<span class="variable">end</span>();
+};
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="lib//wwwdude/node-versions/v0.5.x.js"><a href="#">v0.5.x</a></h2></td><td>lib//wwwdude/node-versions/v0.5.x.js</td></tr><tr class="code">
+<td class="docs">
+<p> delegate requests to v0.4.x module </p>
+</td>
+<td class="code">
+<pre><code><span class="variable">module</span>.<span class="variable">exports</span> = <span class="variable">require</span>(<span class="variable">__dirname</span> + <span class="string">'/v0.4.x'</span>);
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="lib//wwwdude/parsers.js"><a href="#">parsers</a></h2></td><td>lib//wwwdude/parsers.js</td></tr><tr class="code">
+<td class="docs">
+<p>Dependencies
+ </p>
+</td>
+<td class="code">
+<pre><code><span class="keyword">var</span> <span class="class">Util</span> = <span class="variable">require</span>(<span class="string">'util'</span>);</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Content parser wrappers</p>
+
+<h2></h2>
+
+<ul><li><p><strong>return</strong>: <em>Object</em> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">module</span>.<span class="variable">exports</span> = {
+
+  <span class="variable">json</span>: <span class="keyword">function</span> <span class="variable">json</span>(<span class="variable">content</span>, <span class="variable">callback</span>) {
+    <span class="keyword">try</span> {
+      <span class="keyword">if</span> (<span class="variable">content</span>) {
+        <span class="keyword">var</span> <span class="variable">parsed</span> = <span class="class">JSON</span>.<span class="variable">parse</span>(<span class="variable">content</span>);
+        <span class="variable">callback</span>(<span class="keyword">null</span>, <span class="variable">parsed</span>);
+      } <span class="keyword">else</span> {
+        <span class="variable">callback</span>(<span class="keyword">null</span>, {});
+      }
+    } <span class="keyword">catch</span> (<span class="variable">err</span>) {
+      <span class="variable">callback</span>(<span class="variable">err</span>);
+    }
+  },
+
+  <span class="variable">xml</span>: <span class="keyword">function</span> <span class="variable">xml</span>(<span class="variable">content</span>, <span class="variable">callback</span>) {
+    <span class="keyword">var</span> <span class="class">Xml2Js</span> = <span class="variable">require</span>(<span class="string">'xml2js-expat'</span>);
+    <span class="keyword">var</span> <span class="variable">xmlParser</span> = <span class="keyword">new</span> <span class="class">Xml2Js</span>.<span class="class">Parser</span>(<span class="keyword">function</span> (<span class="variable">result</span>, <span class="variable">error</span>) {
+        <span class="keyword">if</span> (<span class="variable">error</span>) {
+          <span class="variable">callback</span>(<span class="variable">error</span>);
+        } <span class="keyword">else</span> {
+          <span class="variable">callback</span>(<span class="keyword">null</span>, <span class="variable">result</span>);
+        }
+      });
+    <span class="variable">xmlParser</span>.<span class="variable">parseString</span>(<span class="variable">content</span>);
+  }
+
+};
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="lib//wwwdude/util.js"><a href="#">util</a></h2></td><td>lib//wwwdude/util.js</td></tr><tr class="code">
+<td class="docs">
+<p> Module dependencies </p>
+</td>
+<td class="code">
+<pre><code><span class="keyword">var</span> <span class="class">Url</span> = <span class="variable">require</span>(<span class="string">'url'</span>);</code></pre>
+</td>
+</tr>
+<tr class="code">
 <td class="docs">
 <p>lookup table for all HTTP status codes</p>
 
@@ -123,8 +425,8 @@ code .this { color: #19469D; }</style>
 <p> 1XX Informational </p>
 </td>
 <td class="code">
-<pre><code><span class="string">'100'</span>: <span class="string">'continue'</span>,
-  <span class="string">'101'</span>: <span class="string">'switching-protocols'</span>,</code></pre>
+<pre><code><span class="comment">//'100': 'continue',</span>
+  <span class="comment">//'101': 'switching-protocols',</span></code></pre>
 </td>
 </tr>
 <tr class="code">
@@ -191,145 +493,69 @@ code .this { color: #19469D; }</style>
   <span class="string">'503'</span>: <span class="string">'service-unavailable'</span>,
   <span class="string">'504'</span>: <span class="string">'gateway-timeout'</span>,
   <span class="string">'505'</span>: <span class="string">'http-version-not-supported'</span>
-};
-</code></pre>
+};</code></pre>
 </td>
-</tr><tr class="filename"><td><h2 id="lib//meta.js"><a href="#">meta</a></h2></td><td>lib//meta.js</td></tr><tr class="code">
+</tr>
+<tr class="code">
 <td class="docs">
-<p>takes two objects and merges their attributes</p>
+<p>Take two objects and merge their attributes</p>
 
 <h2></h2>
 
 <ul><li><p><strong>param</strong>: <em>Object</em>  defaults</p></li><li><p><strong>param</strong>: <em>Object</em>  custom</p></li><li><p><strong>return</strong>: <em>Object</em>  new merged object</p></li><li><p><strong>api</strong>: <em>public</em></p></li></ul>
 </td>
 <td class="code">
-<pre><code><span class="variable">exports</span>.<span class="variable">mergeAttributes</span> = <span class="keyword">function</span> (<span class="variable">defaults</span>, <span class="variable">custom</span>) {
+<pre><code><span class="keyword">var</span> <span class="variable">mergeHeaders</span> = <span class="variable">exports</span>.<span class="variable">mergeHeaders</span> = <span class="keyword">function</span> <span class="variable">mergeHeaders</span>(<span class="variable">defaults</span>, <span class="variable">custom</span>) {
   <span class="keyword">var</span> <span class="variable">obj</span> = {};
 
-  <span class="class">Object</span>.<span class="variable">keys</span>(<span class="variable">defaults</span>).<span class="variable">forEach</span>(<span class="keyword">function</span> (<span class="variable">key</span>) {
-      <span class="variable">obj</span>[<span class="variable">key</span>] = <span class="variable">defaults</span>[<span class="variable">key</span>];
-    });
-  
+  <span class="keyword">function</span> <span class="variable">_normalizeKeys</span>(<span class="variable">toMerge</span>) {
+    <span class="keyword">function</span> <span class="variable">_normalizeKey</span>(<span class="variable">key</span>) {
+      <span class="keyword">return</span> <span class="variable">key</span>.<span class="variable">split</span>(<span class="string">'-'</span>).<span class="variable">map</span>(<span class="keyword">function</span> (<span class="variable">part</span>) {
+          <span class="keyword">return</span> <span class="variable">part</span>.<span class="variable">charAt</span>(<span class="number integer">0</span>).<span class="variable">toUpperCase</span>() + <span class="variable">part</span>.<span class="variable">substring</span>(<span class="number integer">1</span>);
+        }).<span class="variable">join</span>(<span class="string">'-'</span>);
+    }
+
+    <span class="class">Object</span>.<span class="variable">keys</span>(<span class="variable">toMerge</span>).<span class="variable">forEach</span>(<span class="keyword">function</span> (<span class="variable">key</span>) {
+        <span class="keyword">var</span> <span class="variable">normKey</span> = <span class="variable">_normalizeKey</span>(<span class="variable">key</span>);
+        <span class="variable">obj</span>[<span class="variable">normKey</span>] = <span class="variable">toMerge</span>[<span class="variable">key</span>];
+      });
+  }
+
+  <span class="variable">_normalizeKeys</span>(<span class="variable">defaults</span>);
+
   <span class="keyword">if</span> (!<span class="variable">custom</span>) {
     <span class="keyword">return</span> <span class="variable">obj</span>;
   }
 
-  <span class="class">Object</span>.<span class="variable">keys</span>(<span class="variable">custom</span>).<span class="variable">forEach</span>(<span class="keyword">function</span> (<span class="variable">key</span>) {
-    <span class="variable">obj</span>[<span class="variable">key</span>] = <span class="variable">custom</span>[<span class="variable">key</span>]; 
-  });
+  <span class="variable">_normalizeKeys</span>(<span class="variable">custom</span>);
 
   <span class="keyword">return</span> <span class="variable">obj</span>;
+};</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Parse an URL an add some needed properties</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  url</p></li><li><p><strong>return</strong>: <em>Object</em> </p></li><li><p><strong>api</strong>: <em>public</em></p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">exports</span>.<span class="variable">parseUrl</span> = <span class="keyword">function</span> <span class="variable">parseUrl</span>(<span class="variable">url</span>) {
+  <span class="keyword">var</span> <span class="variable">parsedUrl</span> = <span class="class">Url</span>.<span class="variable">parse</span>(<span class="variable">url</span>);
+  <span class="keyword">var</span> <span class="variable">container</span> = {};
+
+  <span class="variable">container</span>.<span class="variable">port</span> = <span class="variable">parsedUrl</span>.<span class="variable">port</span> || ((<span class="variable">parsedUrl</span>.<span class="variable">protocol</span> === <span class="string">'https:'</span>) ? <span class="string">'443'</span> : <span class="string">'80'</span>);
+  <span class="variable">container</span>.<span class="variable">queryparms</span> = <span class="variable">parsedUrl</span>.<span class="variable">query</span> ? <span class="string">'?'</span> + <span class="variable">parsedUrl</span>.<span class="variable">query</span> :  <span class="string">''</span>;
+  <span class="variable">container</span>.<span class="variable">hash</span> = <span class="variable">parsedUrl</span>.<span class="variable">hash</span> || <span class="string">''</span>;
+  <span class="variable">container</span>.<span class="variable">path</span> = (<span class="variable">parsedUrl</span>.<span class="variable">pathname</span> || <span class="string">'/'</span>) + <span class="variable">container</span>.<span class="variable">queryparms</span> + <span class="variable">container</span>.<span class="variable">hash</span>;
+  <span class="variable">container</span>.<span class="variable">host</span> = <span class="variable">parsedUrl</span>.<span class="variable">host</span>;
+  <span class="variable">container</span>.<span class="variable">hostname</span> = <span class="variable">parsedUrl</span>.<span class="variable">hostname</span>;
+  <span class="variable">container</span>.<span class="variable">protocol</span> = <span class="variable">parsedUrl</span>.<span class="variable">protocol</span>;
+
+  <span class="keyword">return</span> <span class="variable">container</span>;
 };
-</code></pre>
-</td>
-</tr><tr class="filename"><td><h2 id="lib//wwwdude.js"><a href="#">wwwdude</a></h2></td><td>lib//wwwdude.js</td></tr><tr class="code">
-<td class="docs">
-<p> Module dependencies </p>
-</td>
-<td class="code">
-<pre><code><span class="keyword">var</span> <span class="class">Sys</span> = <span class="variable">require</span>(<span class="string">'sys'</span>);
-<span class="keyword">var</span> <span class="class">Http</span> = <span class="variable">require</span>(<span class="string">'http'</span>);
-<span class="keyword">var</span> <span class="class">Meta</span> = <span class="variable">require</span>(<span class="string">'./meta'</span>);
-<span class="keyword">var</span> <span class="class">Url</span> = <span class="variable">require</span>(<span class="string">'url'</span>);
-<span class="keyword">var</span> <span class="class">EventEmitter</span> = <span class="variable">require</span>(<span class="string">'events'</span>).<span class="class">EventEmitter</span>;
-<span class="keyword">var</span> <span class="variable">statusCodes</span> = <span class="variable">require</span>(<span class="string">'./httpcodes'</span>).<span class="variable">codes</span>;
-<span class="keyword">var</span> <span class="class">Child_process</span> = <span class="variable">require</span>(<span class="string">'child_process'</span>);
-
-<span class="keyword">var</span> <span class="variable">defaultHeaders</span> = {
-  <span class="string">'User-Agent'</span>: <span class="string">'node-wwwdude'</span>,
-  <span class="string">'Accept-Encoding'</span>: <span class="string">'gzip'</span>
-};</code></pre>
-</td>
-</tr>
-<tr class="code">
-<td class="docs">
-<p>Factory method to initalize a client</p>
-
-<h2></h2>
-
-<ul><li><p><strong>return</strong>: <em>Object</em> </p></li><li><p><strong>api</strong>: <em>public</em></p></li></ul>
-</td>
-<td class="code">
-<pre><code><span class="keyword">var</span> <span class="variable">createClient</span> = <span class="variable">exports</span>.<span class="variable">createClient</span> = <span class="keyword">function</span> <span class="variable">createClient</span>(<span class="variable">clientOptions</span>) {
-  <span class="variable">clientOptions</span> = <span class="variable">clientOptions</span> || {};
-
-  <span class="keyword">var</span> <span class="variable">encoding</span> = <span class="variable">clientOptions</span>.<span class="variable">encoding</span> || <span class="string">'utf8'</span>;
-  <span class="keyword">var</span> <span class="variable">clientHeaders</span> = <span class="class">Meta</span>.<span class="variable">mergeAttributes</span>(<span class="variable">defaultHeaders</span>, <span class="variable">clientOptions</span>.<span class="variable">headers</span>);
-
-  <span class="keyword">if</span> (<span class="variable">clientOptions</span>.<span class="variable">compress</span>) {
-    <span class="variable">clientHeaders</span>[<span class="string">'Accept-Encoding'</span>] = <span class="string">'gzip'</span>;
-  }</code></pre>
-</td>
-</tr>
-<tr class="code">
-<td class="docs">
-<p> Inherit from EventEmitter </p>
-</td>
-<td class="code">
-<pre><code><span class="class">Sys</span>.<span class="variable">inherits</span>(<span class="class">Request</span>, <span class="class">EventEmitter</span>);</code></pre>
-</td>
-</tr>
-<tr class="code">
-<td class="docs">
-<p>Execute a prepared HTTP request</p>
-
-<h2></h2>
-
-<ul><li><p><strong>return</strong>: <em>undefined</em> </p></li><li><p><strong>api</strong>: <em>public</em></p></li></ul>
-</td>
-<td class="code">
-<pre><code><span class="class">Request</span>.<span class="variable">prototype</span>.<span class="variable">send</span> = <span class="keyword">function</span> () {
-    <span class="this">this</span>.<span class="variable">request</span>.<span class="variable">end</span>();
-  };</code></pre>
-</td>
-</tr>
-<tr class="code">
-<td class="docs">
-<p> return the actual API </p>
-</td>
-<td class="code">
-<pre><code><span class="keyword">return</span> {
-
-    <span class="variable">get</span>: <span class="keyword">function</span> (<span class="variable">url</span>, <span class="variable">requestHeaders</span>) {
-      <span class="keyword">var</span> <span class="variable">headers</span> = <span class="class">Meta</span>.<span class="variable">mergeAttributes</span>(<span class="variable">clientHeaders</span>, <span class="variable">requestHeaders</span>);
-      <span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Request</span>(<span class="string">'GET'</span>, <span class="variable">url</span>, { <span class="variable">headers</span>: <span class="variable">headers</span> });
-    },
-
-    <span class="variable">post</span>: <span class="keyword">function</span> (<span class="variable">url</span>, <span class="variable">payload</span>, <span class="variable">requestHeaders</span>) {
-      <span class="keyword">var</span> <span class="variable">headers</span> = <span class="class">Meta</span>.<span class="variable">mergeAttributes</span>(<span class="variable">clientHeaders</span>, <span class="variable">requestHeaders</span>);
-      <span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Request</span>(<span class="string">'POST'</span>, <span class="variable">url</span>, { <span class="variable">headers</span>: <span class="variable">headers</span>, <span class="variable">payload</span>: <span class="variable">payload</span> });
-    },
-
-    <span class="variable">put</span>: <span class="keyword">function</span> (<span class="variable">url</span>, <span class="variable">payload</span>, <span class="variable">requestHeaders</span>) {
-      <span class="keyword">var</span> <span class="variable">headers</span> = <span class="class">Meta</span>.<span class="variable">mergeAttributes</span>(<span class="variable">clientHeaders</span>, <span class="variable">requestHeaders</span>);
-      <span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Request</span>(<span class="string">'PUT'</span>, <span class="variable">url</span>, { <span class="variable">headers</span>: <span class="variable">headers</span>, <span class="variable">payload</span>: <span class="variable">payload</span> });
-    },
-
-    <span class="variable">del</span>: <span class="keyword">function</span> (<span class="variable">url</span>, <span class="variable">requestHeaders</span>) {
-      <span class="keyword">var</span> <span class="variable">headers</span> = <span class="class">Meta</span>.<span class="variable">mergeAttributes</span>(<span class="variable">clientHeaders</span>, <span class="variable">requestHeaders</span>);
-      <span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Request</span>(<span class="string">'DELETE'</span>, <span class="variable">url</span>, { <span class="variable">headers</span>: <span class="variable">headers</span> });
-    },
-
-    <span class="variable">head</span>: <span class="keyword">function</span> (<span class="variable">url</span>, <span class="variable">requestHeaders</span>) {
-      <span class="keyword">var</span> <span class="variable">headers</span> = <span class="class">Meta</span>.<span class="variable">mergeAttributes</span>(<span class="variable">clientHeaders</span>, <span class="variable">requestHeaders</span>);
-      <span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Request</span>(<span class="string">'HEAD'</span>, <span class="variable">url</span>, { <span class="variable">headers</span>: <span class="variable">headers</span> });
-    }
-
-  };
-
-};</code></pre>
-</td>
-</tr>
-<tr class="code">
-<td class="docs">
-<p>add support for require('wwwdude')(option)
-additionally to
-require('wwwdude').createClient(options)
- </p>
-</td>
-<td class="code">
-<pre><code><span class="variable">createClient</span>.<span class="variable">createClient</span> = <span class="variable">createClient</span>;
-<span class="variable">module</span>.<span class="variable">exports</span> = <span class="variable">createClient</span>;
 </code></pre>
 </td>
 </tr>	</body>
