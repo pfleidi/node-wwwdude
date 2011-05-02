@@ -1,7 +1,7 @@
 wwwdude
 ============
 
-wwwdude is a small and flexible http client library on top of node's [http.Client](http://nodejs.org/api.html#http-client-183).
+wwwdude is a small and flexible http client library on top of node's [http.request](http://nodejs.org/docs/v0.4.7/api/http.html#http.request).
 
 Supported HTTP verbs
 --------------------
@@ -58,6 +58,42 @@ A working example:
           sys.puts('Headers: ' + sys.inspect(resp.headers));
         });
 
+Transparent Content Parsing
+----------------------------
+
+wwwdude supports transparent parsing of retrieved content. Parsers for XML and JSON are already included. Just add a contentParser property to the options hash when creating a new client:
+
+    var client = wwwdude.createClient({
+        contentParser: wwwdude.parsers.json
+    });
+
+    client.get('http://some.url/content.json').on('success', function (data, response) {
+      sys.inspect(data);
+      sys.puts('String content: ' + response.rawData);
+    });
+
+
+Retrieved content will now be returned as a JavaScript object instead of a string. A string representation can still be found in response.rawData.
+
+
+### Creating own content parsers
+
+It is also possible to create own content parsers. An example fuch such a parser would be:
+
+    function parser(content, callback) {
+      asyncParseOperation(function (error, result) {
+        if (error) {
+          callback(error);
+        } else {
+          callback(null, result);
+        }
+      });
+    }
+
+    var client = wwwdude.createClient({
+        contentParser: parser
+    });
+
 API
 ---
 
@@ -71,6 +107,7 @@ Creates a new client object with predefined options for each request made with t
 * _followRedirect_ boolean value which enables/disables automatic redirect following. Default is true.
 * _gzip_ boolean value which enables/disables gzip compression
 * _headers_ a hash with the headers you want to use for each request.
+* _contentParser_ a callback driven content parser e.g. wwwdude.parsers.json.
 
 The createClient call returns a Request object. On this object you can call a method for each supported HTTP verb.
 
@@ -190,8 +227,6 @@ TODO:
 -----
 
 * More configurable redirect following (set max. redirect count)
-* Pluggable support for transparent content en/decoders
-* https detection
 * setting custom timeout values
 
 License
