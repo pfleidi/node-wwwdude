@@ -68,7 +68,7 @@ wwwdude supports transparent parsing of retrieved content. Parsers for XML and J
     });
 
     client.get('http://some.url/content.json').on('success', function (data, response) {
-      sys.inspect(data);
+      sys.puts('data: ' + sys.inspect(data));
       sys.puts('String content: ' + response.rawData);
     });
 
@@ -111,7 +111,7 @@ Creates a new client object with predefined options for each request made with t
 
 The createClient call returns a Request object. On this object you can call a method for each supported HTTP verb.
 
-### client.get(url[, requestOptions])
+### client.get(url [, requestOptions])
 
 Creates a HTTP GET request
 
@@ -127,7 +127,7 @@ Creates a HTTP POST request
 
 Creates a HTTP DELETE request
 
-### client.head(url[, requestOptions)]
+### client.head(url [, requestOptions)]
 
 Creates a HTTP HEAD request
 
@@ -150,7 +150,7 @@ Every request call returns a Request object that emits events. You can add liste
 * _success_ emitted when the request was successful (HTTP code 200).
 * _error_ emitted when the request was unsuccessful. This will occur if a network error (tcp, dns, ...) happened.
 * _http-error_ emitted when a HTTP status code > 400 was detected.
-* _http-client-error_ emitted when a HTTP status code 499 was detected.
+* _http-client-error_ emitted when a HTTP status code between 400 and 500 was detected.
 * _http-server-error_ emitted when a HTTP status code > 500 was detected.
 * _redirect_ emitted when a redirect occurred. 
 * _2XX, 3XX, 4XX, 5XX etc_ emitted for every request with a response code of the same status class.
