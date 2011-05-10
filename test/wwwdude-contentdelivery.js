@@ -25,7 +25,7 @@ function _assertWithPayload(beforeExit, verb, payload) {
       assert.strictEqual(data.method, upCase);
       assert.strictEqual(data.url, '/foo');
       assert.strictEqual(data.headers['user-agent'], 'node-wwwdude');
-      assert.equal(data.headers['content-length'], payload.length);
+      assert.equal(data.headers['content-length'], Buffer.byteLength(payload));
       assert.strictEqual(data.payload, payload);
     })
   .on('complete', function (data, resp) {
@@ -43,5 +43,5 @@ exports.assertPayloadPut = function (beforeExit) {
 };
 
 exports.assertPayloadPost = function (beforeExit) {
-  _assertWithPayload(beforeExit, 'post', '2342HurrDurrDerp!');
+  _assertWithPayload(beforeExit, 'post', '2342HurrDurrDerp!äääää');
 };
