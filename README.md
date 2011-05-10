@@ -227,6 +227,7 @@ TODO:
 -----
 
 * More configurable redirect following (set max. redirect count)
+* Multipart HTTP Uploads
 * setting custom timeout values
 
 License
