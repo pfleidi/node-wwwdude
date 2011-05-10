@@ -97,7 +97,7 @@ It is also possible to create own content parsers. An example fuch such a parser
 API
 ---
 
-### wwwdude.createClient([options]) or wwwdude([options])
+### wwwdude.createClient([options])
 
 Creates a new client object with predefined options for each request made with this instance.
 
