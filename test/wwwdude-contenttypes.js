@@ -46,11 +46,11 @@ function _simple(beforeExit, verb, payload, mimetype, gzip) {
 
 
 exports.putDefault = function (beforeExit) {
-  _simple(beforeExit, 'put', 'f9ao-p2lm;lczzfdjs');
+  _simple(beforeExit, 'put', 'f9ao-püü2lm;lczzfdjs');
 };
 
 exports.postDefault = function (beforeExit) {
-  _simple(beforeExit, 'post', 'fafd0=`-21-wo12i09');
+  _simple(beforeExit, 'post', 'füüafd0=`-21-wo12i09');
 };
 
 exports.putJSON = function (beforeExit) {
@@ -58,7 +58,7 @@ exports.putJSON = function (beforeExit) {
 };
 
 exports.putForm = function (beforeExit) {
-  _simple(beforeExit, 'post', 'dfnjfsakl;fdjsalk;jfd;lsajf;lsajkfl', 'application/x-www-form-urlencoded');
+  _simple(beforeExit, 'post', 'dfnjfsaüikl;fdjsalk;jfd;lsajf;lsajkfl', 'application/x-www-form-urlencoded');
 };
 
 exports.postJSON = function (beforeExit) {
