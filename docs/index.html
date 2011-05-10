@@ -273,7 +273,7 @@ code .this { color: #19469D; }</style>
     <span class="keyword">if</span> (!<span class="variable">headers</span>[<span class="string">'Content-Type'</span>]) {
       <span class="variable">headers</span>[<span class="string">'Content-Type'</span>] = <span class="string">'application/x-www-form-urlencoded'</span>;
     }
-    <span class="variable">headers</span>[<span class="string">'Content-Length'</span>] = <span class="variable">payload</span>.<span class="variable">length</span>;
+    <span class="variable">headers</span>[<span class="string">'Content-Length'</span>] = <span class="class">Buffer</span>.<span class="variable">byteLength</span>(<span class="variable">payload</span>);
     <span class="variable">request</span> = <span class="variable">client</span>.<span class="variable">request</span>(<span class="variable">context</span>.<span class="variable">method</span>, <span class="variable">url</span>.<span class="variable">path</span>, <span class="variable">headers</span>);
     <span class="variable">request</span>.<span class="variable">write</span>(<span class="variable">payload</span>, <span class="variable">context</span>.<span class="variable">encoding</span>);
   } <span class="keyword">else</span> {
@@ -325,7 +325,7 @@ code .this { color: #19469D; }</style>
     <span class="keyword">if</span> (!<span class="variable">headers</span>[<span class="string">'Content-Type'</span>]) {
       <span class="variable">headers</span>[<span class="string">'Content-Type'</span>] = <span class="string">'application/x-www-form-urlencoded'</span>;
     }
-    <span class="variable">headers</span>[<span class="string">'Content-Length'</span>] = <span class="variable">payload</span>.<span class="variable">length</span>;
+    <span class="variable">headers</span>[<span class="string">'Content-Length'</span>] = <span class="class">Buffer</span>.<span class="variable">byteLength</span>(<span class="variable">payload</span>);
   }
 
   <span class="keyword">if</span> (<span class="variable">url</span>.<span class="variable">protocol</span> === <span class="string">'https:'</span>) {
