@@ -217,7 +217,7 @@ Tests
 
 To run the unit tests, expresso, semver and connect are required. You can install it via npm:
 
-    npm install expresso connect semver
+    npm install xml2js-expat expresso connect semver
 
 There's a Makefile to run the tests:
 
