@@ -16,7 +16,7 @@ function _testClientErrs(beforeExit, toCompare, url) {
   .on('error', function (err) {
       callbacks += 1;
       assert.ok(err);
-      assert.strictEqual(err.message, toCompare);
+      assert.strictEqual(err.code, toCompare);
     })
   .on('complete', function () {
       callbacks += 1;
@@ -29,13 +29,13 @@ function _testClientErrs(beforeExit, toCompare, url) {
 }
 
 exports.networkConnRefused = function (beforeExit) {
-  _testClientErrs(beforeExit, 'ECONNREFUSED, Connection refused', 'http://localhost:63424');
+  _testClientErrs(beforeExit, 'ECONNREFUSED', 'http://localhost:63424');
 };
 
 exports.networkHostNotReachable = function (beforeExit) {
-  _testClientErrs(beforeExit, 'ETIMEDOUT, Operation timed out', 'http://127.0.22.32:63424');
+  _testClientErrs(beforeExit, 'ETIMEDOUT', 'http://127.0.22.32:63424');
 };
 
 exports.networkDomainNotFound = function (beforeExit) {
-  _testClientErrs(beforeExit, 'ENOTFOUND, Domain name not found', 'http://wrong.tld.foo.bar:63424');
+  _testClientErrs(beforeExit, 'ENOTFOUND', 'http://wrong.tld.foo.bar:63424');
 };
