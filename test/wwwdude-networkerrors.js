@@ -32,11 +32,9 @@ exports.networkConnRefused = function (beforeExit) {
   _testClientErrs(beforeExit, 'ECONNREFUSED', 'http://localhost:63424');
 };
 
-/*
 exports.networkHostNotReachable = function (beforeExit) {
   _testClientErrs(beforeExit, 'ETIMEDOUT', 'http://127.0.22.32:63424');
 };
-*/
 
 exports.networkDomainNotFound = function (beforeExit) {
   _testClientErrs(beforeExit, 'ENOTFOUND', 'http://wrong.tld.foo.bar:63424');
@@ -53,9 +51,8 @@ exports.timeoutTest = function (beforeExit) {
   .on('error', function (err) {
       var elapsed = new Date() - start;
       callbacks += 1;
-      console.log(elapsed);
       assert.ok(err);
-      assert.ok();
+      assert.ok(elapsed > 500 && elapsed < 520);
     })
   .on('complete', function () {
       callbacks += 1;
