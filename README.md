@@ -16,11 +16,13 @@ Features
 --------
 
 * Support for Node 0.2.x AND 0.4.x
+* Flexible handling of responses with event emitters
 * Very customizable (custom headers on client/request basis ...)
 * Automatic redirect following
-* Automatic gzip decode support 
-* Automatic support for HTTPS (node 0.4.x only)
-* Flexible handling of responses with event emitters
+* Automatic gzip decode support
+* Automatic content parsing support
+* Automatic support for HTTPS (node >= 0.4.x only)
+* Support for request timeouts (node >= 0.4.x only)
 
 Installation
 ------------
@@ -34,12 +36,13 @@ Usage
 
 A working example:
 
-    var sys = require('sys'),
-    wwwdude = require('wwwdude');
+    var sys = require('sys');
+    var wwwdude = require('wwwdude');
 
     var client = wwwdude.createClient({
         headers: { 'User-Agent': 'wwwdude test 42' },
-        gzip: true
+        gzip: true,
+        timeout: 500 // 500ms timeout
       });
 
     client.get('http://google.com/')
@@ -103,11 +106,12 @@ Creates a new client object with predefined options for each request made with t
 
 #### options hash
 
-* _encoding_ content encoding. e.g. binary or utf8. Default is utf8. 
+* _encoding_ content encoding. e.g. binary or utf8. Default is utf8.
 * _followRedirect_ boolean value which enables/disables automatic redirect following. Default is true.
 * _gzip_ boolean value which enables/disables gzip compression
 * _headers_ a hash with the headers you want to use for each request.
 * _contentParser_ a callback driven content parser e.g. wwwdude.parsers.json.
+* _timeout_ a timeout value after which the request should be canceled.
 
 The createClient call returns a Request object. On this object you can call a method for each supported HTTP verb.
 
@@ -152,7 +156,7 @@ Every request call returns a Request object that emits events. You can add liste
 * _http-error_ emitted when a HTTP status code > 400 was detected.
 * _http-client-error_ emitted when a HTTP status code between 400 and 500 was detected.
 * _http-server-error_ emitted when a HTTP status code > 500 was detected.
-* _redirect_ emitted when a redirect occurred. 
+* _redirect_ emitted when a redirect occurred.
 * _2XX, 3XX, 4XX, 5XX etc_ emitted for every request with a response code of the same status class.
 * _actual response code_ emitted for every response with a matching response code. E.g. 200, 301, 404 ...
 * _actual human readable response code_ emitted for every response with a matching readable response. E.g. 'not-found', 'bad-request', 'forbidden' ...
@@ -223,12 +227,15 @@ There's a Makefile to run the tests:
 
     make test
 
+Unfortunately, the tests currently run only on Node >= 0.4, but the client still works on Node 0.2.x.
+
+
 TODO:
 -----
 
-* More configurable redirect following (set max. redirect count)
+* More configurable redirect following (loop detection, ttl support)
+* Fully automatic content parsing based on Content-Type headers
 * Multipart HTTP Uploads
-* setting custom timeout values
 
 License
 -------
