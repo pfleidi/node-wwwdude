@@ -22,7 +22,7 @@ Features
 * Automatic gzip decode support
 * Automatic content parsing support
 * Automatic support for HTTPS (node >= 0.4.x only)
-* Support for request timeouts (node >= 0.4.x only)
+* Support for request timeouts (EXPERIMENTAL, node >= 0.4.x only)
 
 Installation
 ------------
