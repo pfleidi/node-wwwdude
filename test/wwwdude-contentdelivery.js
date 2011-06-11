@@ -11,6 +11,7 @@ var Helper = require('./test_helper');
 var HttpClient = require('../index');
 
 var client = HttpClient.createClient({ contentParser: HttpClient.parsers.json});
+var client2 = HttpClient.createClient({ contentParser: HttpClient.parsers.xml});
 
 function _assertWithPayload(beforeExit, verb, payload) {
   var callbacks = 0;
@@ -34,8 +35,27 @@ function _assertWithPayload(beforeExit, verb, payload) {
 
   beforeExit(function () {
       assert.strictEqual(callbacks, 2, 'Ensure all callbacks are called');
+  });
+
+}
+
+function _assertWithNullPayload(beforeExit, nullValue, client) {
+  var callbacks = 0;
+  var nullServer = Helper.nullServer();
+
+  client.put(nullServer.url + '/null', { payload: 'payload' })
+  .on('success', function (data, resp) {
+      callbacks += 1;
+      assert.deepEqual(data, nullValue, 'Data must be empty when body is missing');
+      assert.ok(resp, 'Response must be provided');
+    })
+  .on('complete', function (data, resp) {
+      callbacks += 1;
     });
 
+  beforeExit(function () {
+      assert.strictEqual(callbacks, 2, 'Ensure all callbacks are called');
+  });
 }
 
 exports.assertPayloadPut = function (beforeExit) {
@@ -44,4 +64,12 @@ exports.assertPayloadPut = function (beforeExit) {
 
 exports.assertPayloadPost = function (beforeExit) {
   _assertWithPayload(beforeExit, 'post', '2342HurrDurrDerp!äääää');
+};
+
+exports.assertNullPayloadJson = function (beforeExit) {
+  _assertWithNullPayload(beforeExit, {}, client);
+};
+
+exports.assertNullPayloadXml = function (beforeExit) {
+  _assertWithNullPayload(beforeExit, '', client2);
 };
