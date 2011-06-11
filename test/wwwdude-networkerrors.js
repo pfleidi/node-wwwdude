@@ -52,7 +52,7 @@ exports.timeoutTest = function (beforeExit) {
       var elapsed = new Date() - start;
       callbacks += 1;
       assert.ok(err);
-      assert.ok(elapsed > 500 && elapsed < 520);
+      assert.ok(elapsed >= 500 && elapsed < 520);
     })
   .on('complete', function () {
       callbacks += 1;

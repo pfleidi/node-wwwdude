@@ -117,3 +117,33 @@ exports.redirectServer = function (code) {
     serv: server
   };
 };
+
+exports.nullServer = function () {
+  var port = exports.port;
+  exports.port += 1;
+  
+  function handler(request, response, next) {
+    var headers = {
+      'Content-Type': 'application/json',
+    };
+
+    response.writeHead(200, headers);
+    response.end();
+    server.close();
+  }
+
+  var server = Connect.createServer(
+    Connect.bodyParser(),
+    Gzip(),
+    Connect.router(function (app) {
+        _routeall(app, /null(.*)/, handler);
+      })
+  );
+
+  server.listen(port, 'localhost');
+
+  return {
+    url: 'http://localhost:' + port,
+    serv: server
+  };
+};
