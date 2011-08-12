@@ -17,7 +17,8 @@
       "url" : "http://github.com/pfleidi/node-wwwdude/raw/master/LICENSE"
     }],
   "dependencies" : {
-    "xml2js-expat" : "= 0.2.0"
+    "xml2js-expat" : "= 0.2.0",
+    "compress": "=0.1.9"
   },
   "engines" : { "node": ">= 0.2.0" },
   "main" : "index"
