@@ -71,5 +71,5 @@ exports.assertNullPayloadJson = function (beforeExit) {
 };
 
 exports.assertNullPayloadXml = function (beforeExit) {
-  _assertWithNullPayload(beforeExit, '', client2);
+  _assertWithNullPayload(beforeExit, {}, client2);
 };
