@@ -11,18 +11,17 @@
   "bugs" : { 
     "web" : "http://github.com/pfleidi/node-wwwdude/issues" 
   }, 
-  "licenses" :
-    [{ 
+  "licenses" : [{ 
       "type" : "MIT",
       "url" : "http://github.com/pfleidi/node-wwwdude/raw/master/LICENSE"
     }],
   "dependencies" : {
     "xml2js" : "= 0.1.9",
-    "compress": "= 0.1.9"
+    "compress" : "= 0.1.9"
   },
   "devDependencies": {
-    "expresso",
-    "connect"
+    "expresso" : ">= 0.8.1",
+    "connect" : ">= 1.6.1"
   },
   "engines" : { "node": ">= 0.2.0" },
   "main" : "index"
