@@ -36,7 +36,7 @@ Usage
 
 A working example:
 
-    var sys = require('sys');
+    var util = require('util');
     var wwwdude = require('wwwdude');
 
     var client = wwwdude.createClient({
@@ -47,18 +47,18 @@ A working example:
 
     client.get('http://google.com/')
       .addListener('error', function (err) {
-          sys.puts('Network Error: ' + sys.inspect(err));
+          util.puts('Network Error: ' + util.inspect(err));
         })
       .addListener('http-error', function (data, resp) {
-          sys.puts('HTTP Error for: ' + resp.host + ' code: ' + resp.statusCode);
+          util.puts('HTTP Error for: ' + resp.host + ' code: ' + resp.statusCode);
         })
       .addListener('redirect', function (data, resp) {
-          sys.puts('Redirecting to: ' + resp.headers['location']);
-          sys.puts('Headers: ' + sys.inspect(resp.headers));
+          util.puts('Redirecting to: ' + resp.headers['location']);
+          util.puts('Headers: ' + util.inspect(resp.headers));
         })
       .addListener('success', function (data, resp) {
-          sys.debug('Got data: ' + data);
-          sys.puts('Headers: ' + sys.inspect(resp.headers));
+          util.debug('Got data: ' + data);
+          util.puts('Headers: ' + util.inspect(resp.headers));
         });
 
 Transparent Content Parsing
@@ -71,8 +71,8 @@ wwwdude supports transparent parsing of retrieved content. Parsers for XML and J
     });
 
     client.get('http://some.url/content.json').on('success', function (data, response) {
-      sys.puts('data: ' + sys.inspect(data));
-      sys.puts('String content: ' + response.rawData);
+      util.puts('data: ' + util.inspect(data));
+      util.puts('String content: ' + response.rawData);
     });
 
 
