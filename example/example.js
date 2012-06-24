@@ -1,4 +1,4 @@
-var Sys = require('sys'),
+var Sys = require('util'),
 HttpClient = require('wwwdude');
 
 // simple example
